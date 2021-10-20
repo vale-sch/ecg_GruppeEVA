@@ -35,7 +35,7 @@
         precision mediump float;
 
         void main() {
-            gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+            gl_FragColor = vec4(0.4, 0.8, 0, 1.0);
         }
     </script>
     <!-- the JavaScript code -->
@@ -65,7 +65,7 @@
 
         // Define the points in the scene
         const coordinates = [];
-        var num = 1000
+        var num = 3000
         for (var i = 0; i < num; i++) {
             var y = Math.sin(i / num * Math.PI * 2);
             var x = Math.cos(i / num * Math.PI * 2);
@@ -149,7 +149,7 @@
         // Draw the points on the screen
         const mode = gl.TRIANGLES;
         const first = 0;
-        const count = 1500;
+        const count = 9000;
         gl.drawArrays(mode, first, count);
     </script>
 </body>
