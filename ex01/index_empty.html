@@ -8,15 +8,14 @@
     <title>WebGL Demo</title>
     <style>
         canvas {
-            width: 100vw;
-            height: 100vh;
+
             display: block;
         }
     </style>
 </head>
 
 <body>
-    <canvas id="canvas" width="1000" height="800"></canvas>
+    <canvas id="canvas" width="1200" height="1200"></canvas>
     <!-- HTML5 canvas element where all is drawn, note that the resolution is key -->
     <br />
 
@@ -149,7 +148,7 @@
         // Draw the points on the screen
         const mode = gl.TRIANGLES;
         const first = 0;
-        const count = 9000;
+        const count = 4500;
         gl.drawArrays(mode, first, count);
     </script>
 </body>
