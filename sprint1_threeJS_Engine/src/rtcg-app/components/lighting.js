@@ -1,0 +1,1 @@
+// hier noch der lighting code wie bei der camera.js
