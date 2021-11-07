@@ -17,7 +17,7 @@ class ToolSwitcher {
         $('#scene-container').get(0).addEventListener("mousemove", (event) => {
             this.mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
             this.mouse.y = - ( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
-            console.log("x: " + this.mouse.x + " y: " + this.mouse.y);
+            //console.log("x: " + this.mouse.x + " y: " + this.mouse.y);
             let currentPos = {x: this.mouse.x, y: this.mouse.y}
 
             this.raycaster.setFromCamera( this.mouse, this.camera );
