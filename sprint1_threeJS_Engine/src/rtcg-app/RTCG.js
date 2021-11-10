@@ -20,10 +20,11 @@ let startPos = {}
 let endPos = {}
 let mouseDown = false;
 let changeCol;
-let lightDir;
+var lightDir;
 let colGrad;
 let alphaVal;
-
+let hasSliders = false;
+let light;
 class RTCG {
     //1.ErstellungeinerInstanzderRTCG-App
     constructor(container) {
@@ -35,7 +36,7 @@ class RTCG {
         resizer = new Resizer(container, camera, renderer, this.render);
 
         const cube = createCube();
-        const light = createLight();
+        light = createLight();
 
         scene.add(cube);
         scene.add(light);
@@ -46,7 +47,7 @@ class RTCG {
         animator.add(camera);
 
         toolSwitcher = new ToolSwitcher(animator, renderer, camera);
-        toolSwitcher.turnOnMouseAnimationAppending(cube);
+        // toolSwitcher.turnOnMouseAnimationAppending(cube);
         /*animator.addTimeRestrainedAnimation(cube, "move", {x: 3.5}, 2, false, 0);
         animator.addTimeRestrainedAnimation(cube, "move", {y: 3.5}, 2, false, 0);
         animator.addTimeRestrainedAnimation(cube, "move", {x: -7}, 2, false, 0);
@@ -67,15 +68,20 @@ class RTCG {
         for (let i = 0; i < intersects.length; i++) {
             intersects[i].object.material.color.set(0xff0000);
         }
+        if (hasSliders) {
+            light.position.set(lightDir.value * 10, lightDir.value * 2, 4);
+
+        }
 
         renderer.render(scene, camera);
     }
 
     getSliders() {
         changeCol = document.querySelector('#colChange');
-        lightDir = document.querySelector('#lightDir');
+        lightDir = document.getElementById('lightDir');
         colGrad = document.querySelector('#colGrad');
         alphaVal = document.querySelector('#alphaVal');
+        hasSliders = true;
     }
 }
 
