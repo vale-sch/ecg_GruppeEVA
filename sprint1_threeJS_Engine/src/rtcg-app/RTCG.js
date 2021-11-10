@@ -1,6 +1,7 @@
 import { createCamera } from './components/camera.js';
 import { createCube } from './components/box.js';
 import { createScene } from './components/scene.js';
+import { createLight } from './components/lighting.js';
 import { createRenderer } from './systems/renderer.js';
 import { Animator } from './systems/Animator.js';
 import { Resizer } from './systems/Resizer.js';
@@ -22,6 +23,7 @@ let changeCol;
 let lightDir;
 let colGrad;
 let alphaVal;
+
 class RTCG {
     //1.ErstellungeinerInstanzderRTCG-App
     constructor(container) {
@@ -32,9 +34,12 @@ class RTCG {
 
         resizer = new Resizer(container, camera, renderer, this.render);
 
-
         const cube = createCube();
+        const light = createLight();
+
         scene.add(cube);
+        scene.add(light);
+        light.position.set(-1, 2, 4);
 
         animator = new Animator(this.render, cube);
         animator.add(cube);
