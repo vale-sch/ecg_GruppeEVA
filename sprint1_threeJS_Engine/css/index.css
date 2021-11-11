@@ -17,3 +17,9 @@ body {
     color: purple;
     z-index: 10;
 }
+#slider-container {
+    padding-right: 1%;
+    position: absolute;
+    top: 0%;
+    right: 0%;   
+}
