@@ -1,5 +1,5 @@
 import { createCamera } from './components/camera.js';
-import { createCube } from './components/box.js';
+import { createCube, createSphere } from './components/primitiveObjects.js';
 import { createScene } from './components/scene.js';
 import { createLight } from './components/lighting.js';
 import { createRenderer } from './systems/renderer.js';
@@ -36,15 +36,19 @@ class RTCG {
         resizer = new Resizer(container, camera, renderer, this.render);
 
         const cube = createCube();
+        const sphere = createSphere();
+        sphere.position.set(-20, 0, 0);
+
         light = createLight();
 
         scene.add(cube);
+        scene.add(sphere);
         scene.add(light);
         light.position.set(-1, 2, 4);
 
-        animator = new Animator(this.render, cube);
+        animator = new Animator(this.render);
         animator.add(cube);
-        animator.add(camera);
+        animator.add(sphere);
 
         toolSwitcher = new ToolSwitcher(animator, renderer, camera);
         // toolSwitcher.turnOnMouseAnimationAppending(cube);
@@ -54,6 +58,7 @@ class RTCG {
         animator.addTimeRestrainedAnimation(cube, "move", {y: -7}, 2, false, 0);
         animator.addTimeRestrainedAnimation(cube, "move", {z: 10}, 1, false, 1);*/
         animator.addContinuousAnimation(cube, "rotate", { x: 1, y: 1 });
+        animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
         animator.start();
 
         this.getSliders();
