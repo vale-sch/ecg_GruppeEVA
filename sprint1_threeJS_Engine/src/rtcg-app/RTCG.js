@@ -45,8 +45,8 @@ class RTCG {
         animator.add(cube);
         animator.add(camera);
 
-        toolSwitcher = new ToolSwitcher(animator, renderer, camera);
-        toolSwitcher.turnOnMouseAnimationAppending(cube);
+        //toolSwitcher = new ToolSwitcher(animator, renderer, camera);
+        //toolSwitcher.turnOnMouseAnimationAppending(cube);
         /*animator.addTimeRestrainedAnimation(cube, "move", {x: 3.5}, 2, false, 0);
         animator.addTimeRestrainedAnimation(cube, "move", {y: 3.5}, 2, false, 0);
         animator.addTimeRestrainedAnimation(cube, "move", {x: -7}, 2, false, 0);
