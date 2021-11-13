@@ -13,7 +13,6 @@ let renderer;
 let scene;
 let resizer;
 let animator;
-let light;
 
 let alphaVal;
 let intensity;
@@ -21,10 +20,12 @@ let lightInten;
 let lightPosX;
 let lightColor;
 
-
 let cube;
 let torusKnot;
 let plane;
+let helper;
+let light;
+
 
 class RTCG {
     //1.ErstellungeinerInstanzderRTCG-App
@@ -39,15 +40,11 @@ class RTCG {
 
         this.createSceneContent();
 
-
         scene.add(light);
-        const helper = new CameraHelper(light.shadow.camera);
         scene.add(helper);
         scene.add(cube);
         scene.add(torusKnot);
         scene.add(plane);
-
-
 
         animator = new Animator(this.render);
         animator.add(cube);
@@ -65,16 +62,14 @@ class RTCG {
 
         light = createLight();
         light.position.set(0, 21, 0);
-        console.log(light);
+        helper = new CameraHelper(light.shadow.camera);
 
         cube = createCube();
         torusKnot = createTorusKnot();
         plane = createPlane();
 
-
         cube.castShadow = true;
         torusKnot.castShadow = true;
-
         plane.receiveShadow = true;
 
         cube.position.set(15, 10, 0);
