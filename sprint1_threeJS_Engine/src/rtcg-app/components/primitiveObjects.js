@@ -65,7 +65,7 @@ function createCube() {
 
 function createTorusKnot() {
     //ERstellungderGeometrie
-    const geometry = new TorusKnotGeometry(5, 2, 50, 8);
+    const geometry = new TorusKnotGeometry(6, 2, 60, 8);
 
 
     //ERstellungdesStandardBasismaterials

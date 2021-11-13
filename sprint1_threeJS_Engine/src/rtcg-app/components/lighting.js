@@ -8,6 +8,10 @@ function createLight(color, intensity) {
 
     const light = new DirectionalLight(color, intensity);
     light.castShadow = true;
+    light.shadow.camera.left = -28;
+    light.shadow.camera.right = 28;
+    light.shadow.camera.top = 50;
+    light.shadow.camera.bottom = -12;
     return light;
 }
 

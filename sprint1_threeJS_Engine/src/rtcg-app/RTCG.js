@@ -19,6 +19,7 @@ let alphaVal;
 let intensity;
 let lightInten;
 let lightPosX;
+let lightColor;
 
 
 let cube;
@@ -63,7 +64,7 @@ class RTCG {
     createSceneContent() {
 
         light = createLight();
-        light.position.set(0, 20, 0);
+        light.position.set(0, 21, 0);
         console.log(light);
 
         cube = createCube();
@@ -99,6 +100,9 @@ class RTCG {
         alphaVal = document.getElementById('alphaVal');
         alphaVal.addEventListener('change', this.changeAlphaValue);
 
+        lightColor = document.getElementById('color');
+        lightColor.addEventListener('change', this.changeLightColor);
+
         this.setLightPosFirstTime();
     }
     changeColIntensity() {
@@ -123,6 +127,26 @@ class RTCG {
         torusKnot.material.uniforms.lightPos.value = light.position;
         light.position.set(lightPosX.value, light.position.y, light.position.z);
     }
-}
+    changeLightColor() {
 
+        light.color = hexToRgb(lightColor.value);
+
+        console.log(light.color);
+    }
+
+}
+function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16) / 255,
+        g: parseInt(result[2], 16) / 255,
+        b: parseInt(result[3], 16) / 255
+    } : null;
+}
 export { RTCG };
