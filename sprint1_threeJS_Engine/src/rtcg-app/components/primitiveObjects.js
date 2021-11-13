@@ -1,26 +1,29 @@
-import { Uniform, BoxBufferGeometry, SphereGeometry, Mesh, MeshBasicMaterial, MeshPhongMaterial, ShaderMaterial, Vector2, Vector3 } from 'https://unpkg.com/three@0.127.0/build/three.module.js ';
+import { Uniform, BoxBufferGeometry, TorusKnotGeometry, Mesh, PlaneGeometry, MeshPhongMaterial, ShaderMaterial, Vector2, Vector3, DoubleSide } from 'https://unpkg.com/three@0.127.0/build/three.module.js ';
 
 function createCube() {
     //ERstellungderGeometrie
     const geometry = new BoxBufferGeometry(10, 10, 10);
 
-
     //ERstellungdesStandardBasismaterials
     const material = new ShaderMaterial({
-
+        transparent: true,
         uniforms: {
 
             time: { value: 1.0 },
             resolution: { value: new Vector2() },
+            lightPos: new Uniform(new Vector3(0, 0, 0)),
+            intensity: { value: 0.0016 },
+            lightIntensity: { value: 1.0 },
+            lightPosX: { value: 0.0 },
+            aValue: { value: 1.0 }
 
-            
-            lightPos: new Uniform(new Vector3(0, 10, 10)),
-        
 
         },
 
         vertexShader: `
             uniform vec3 lightPos;
+            uniform float lightIntensity;
+            uniform float lightPosX;
             varying vec3 normalInterp;
             varying vec3 vertPos;
             varying vec4 fragColor;
@@ -29,8 +32,8 @@ function createCube() {
                 vec4 vertPos4 = modelViewMatrix * vec4(position, 1.0);
                 normalInterp = vec3(normalMatrix * normal);
                 gl_Position = projectionMatrix * vertPos4;
-                float intensity = dot(normalInterp, lightPos);
-                fragColor = vec4(normalInterp * intensity, 1);
+                float intensity = dot(normalInterp, vec3(lightPosX, lightPos.y, lightPos.z)) ;
+                fragColor = vec4((normalInterp * intensity), 1.0 )* lightIntensity;
             }
         `,
 
@@ -38,62 +41,63 @@ function createCube() {
         fragmentShader: `
             varying vec4 fragColor;
             varying vec3 normalInterp;
-
+            uniform float intensity;
+            uniform float aValue;
             precision mediump float;
             float pi = 3.14159265359;
-            float intesity = 0.0016;
         
             void main() {
-                float colorX = gl_FragCoord.x * intesity * (pi * 2.0);
-                float colorY = gl_FragCoord.y * intesity * (pi * 2.0);
+                float colorX = gl_FragCoord.x * intensity * (pi * 2.0);
+                float colorY = gl_FragCoord.y * intensity * (pi * 2.0);
         
-                float rValue = sin(colorX * colorY);
+                float rValue = sin(colorX * colorY) ;
                 float gValue = cos(colorX * colorY);
                 float bValue = tan(colorX * colorY);
         
-                gl_FragColor = vec4(rValue, gValue, bValue, 1) * 0.2 + fragColor * 0.8;          
+                gl_FragColor = vec4(rValue* fragColor.x, gValue* fragColor.y, bValue* fragColor.z, aValue) ;          
             }    
         `
     });
-    // const material = new MeshPhongMaterial({color: 0x44aa88});
     //ErzeugungeinesMeshesmdassGeometrieundMaterialbeinhaltet
     const cube = new Mesh(geometry, material);
     return cube;
 }
 
-function createSphere() {
+function createTorusKnot() {
     //ERstellungderGeometrie
-    const geometry = new SphereGeometry(10);
+    const geometry = new TorusKnotGeometry(5, 2, 50, 8);
 
 
     //ERstellungdesStandardBasismaterials
     const material = new ShaderMaterial({
-
+        transparent: true,
         uniforms: {
 
             time: { value: 1.0 },
             resolution: { value: new Vector2() },
+            lightPos: new Uniform(new Vector3(0, 0, 0)),
+            intensity: { value: 0.0016 },
+            lightIntensity: { value: 1.0 },
+            lightPosX: { value: 0.0 },
+            aValue: { value: 1.0 }
 
-            ambientColor: new Vector3(255, 0, 0),
-            diffuseColor: new Vector3(255, 0 , 255),
-            specularColor: new Vector3(255,255,255),
-            lightPos: new Vector3(0, 10, 10),
-        
 
         },
 
         vertexShader: `
-            uniform mat4 normalMat;
+            uniform vec3 lightPos;
+            uniform float lightIntensity;
+            uniform float lightPosX;
             varying vec3 normalInterp;
             varying vec3 vertPos;
             varying vec4 fragColor;
             
             void main(){
                 vec4 vertPos4 = modelViewMatrix * vec4(position, 1.0);
-                vertPos = vec3(vertPos4) / vertPos4.w;
-                normalInterp = vec3(normalMat * vec4(normal, 0.0));
+                normalInterp = vec3(normalMatrix * normal);
                 gl_Position = projectionMatrix * vertPos4;
-                fragColor =  vec4(normal, 1);
+                float intensity = dot(normalInterp, vec3(lightPosX, lightPos.y, lightPos.z)) ;
+                fragColor = vec4((normalInterp * intensity), 1.0 )* lightIntensity;
             }
         `,
 
@@ -101,27 +105,35 @@ function createSphere() {
         fragmentShader: `
             varying vec4 fragColor;
             varying vec3 normalInterp;
-
+            uniform float intensity;
+            uniform float aValue;
             precision mediump float;
             float pi = 3.14159265359;
-            float intesity = 0.0016;
         
             void main() {
-                float colorX = gl_FragCoord.x * intesity * (pi * 2.0);
-                float colorY = gl_FragCoord.y * intesity * (pi * 2.0);
+                float colorX = gl_FragCoord.x * intensity * (pi * 2.0);
+                float colorY = gl_FragCoord.y * intensity * (pi * 2.0);
         
-                float rValue = sin(colorX * colorY);
+                float rValue = sin(colorX * colorY) ;
                 float gValue = cos(colorX * colorY);
                 float bValue = tan(colorX * colorY);
         
-                gl_FragColor = vec4(rValue, gValue, bValue, 1) * 0.6 + fragColor * 0.4;          
+                gl_FragColor = vec4(rValue* fragColor.x, gValue* fragColor.y, bValue* fragColor.z, aValue) ;          
             }    
         `
     });
-    // const material = new MeshPhongMaterial({color: 0x44aa88});
+
     //ErzeugungeinesMeshesmdassGeometrieundMaterialbeinhaltet
     const sphere = new Mesh(geometry, material);
     return sphere;
 }
+function createPlane() {
+    const geometry = new PlaneGeometry(60, 60);
+    const material = new MeshPhongMaterial({ color: 'grey', side: DoubleSide });
 
-export { createCube, createSphere };
+    const plane = new Mesh(geometry, material);
+    return plane;
+
+}
+
+export { createCube, createTorusKnot, createPlane };
