@@ -6,6 +6,8 @@ import { createRenderer } from './systems/renderer.js';
 import { Animator } from './systems/Animator.js';
 import { Resizer } from './systems/Resizer.js';
 import { CameraHelper } from 'https://unpkg.com/three@0.127.0/build/three.module.js';
+import { PointLightHelper } from 'https://unpkg.com/three@0.127.0/build/three.module.js';
+
 
 
 let camera;
@@ -51,7 +53,7 @@ class RTCG {
         animator.add(torusKnot);
         animator.add(plane);
 
-        animator.addContinuousAnimation(cube, "rotate", { x: 1, y: 1 });
+        //animator.addContinuousAnimation(cube, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(torusKnot, "rotate", { x: 1, y: 1 });
         animator.start();
 
@@ -61,10 +63,13 @@ class RTCG {
     createSceneContent() {
 
         light = createLight();
-        light.position.set(0, 21, 0);
-        helper = new CameraHelper(light.shadow.camera);
-
-        cube = createCube();
+        light.position.set(10, 21, 0);
+        helper = new PointLightHelper(light);
+        //helper = new CameraHelper(light.shadow.camera);
+        
+        cube = createCube(light, camera);
+        cube.rotation.z = 30;
+        cube.rotation.y = 1;
         torusKnot = createTorusKnot();
         plane = createPlane();
 
@@ -72,7 +77,7 @@ class RTCG {
         torusKnot.castShadow = true;
         plane.receiveShadow = true;
 
-        cube.position.set(15, 10, 0);
+        cube.position.set(0, 10, 0);
         torusKnot.position.set(-15, 10, 0);
         plane.position.set(0, 0, -10);
         plane.rotation.set(-180, 0, 0);
@@ -120,7 +125,7 @@ class RTCG {
     changeLightPosX() {
         cube.material.uniforms.lightPos.value = light.position;
         torusKnot.material.uniforms.lightPos.value = light.position;
-        light.position.set(lightPosX.value, light.position.y, light.position.z);
+        light.position.set(parseInt(lightPosX.value), light.position.y, light.position.z);
     }
     changeLightColor() {
 
