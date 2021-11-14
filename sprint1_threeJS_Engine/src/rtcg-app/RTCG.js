@@ -1,5 +1,5 @@
 import { createCamera } from './components/camera.js';
-import { createCube, createTorusKnot, createPlane } from './components/primitiveObjects.js';
+import { createCube, createTorusKnot, createPlane, createSphere } from './components/primitiveObjects.js';
 import { createScene } from './components/scene.js';
 import { createLight } from './components/lighting.js';
 import { createRenderer } from './systems/renderer.js';
@@ -27,6 +27,7 @@ let torusKnot;
 let plane;
 let helper;
 let light;
+let sphere;
 
 
 class RTCG {
@@ -44,6 +45,7 @@ class RTCG {
 
         scene.add(light);
         scene.add(helper);
+        scene.add(sphere);
         scene.add(cube);
         scene.add(torusKnot);
         scene.add(plane);
@@ -53,7 +55,7 @@ class RTCG {
         animator.add(torusKnot);
         animator.add(plane);
 
-        //animator.addContinuousAnimation(cube, "rotate", { x: 1, y: 1 });
+        animator.addContinuousAnimation(cube, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(torusKnot, "rotate", { x: 1, y: 1 });
         animator.start();
 
@@ -68,8 +70,9 @@ class RTCG {
         //helper = new CameraHelper(light.shadow.camera);
         
         cube = createCube(light, camera);
-        cube.rotation.z = 30;
-        cube.rotation.y = 1;
+        sphere = createSphere(light, camera);
+        sphere.position.set(15,10,0);
+
         torusKnot = createTorusKnot();
         plane = createPlane();
 
@@ -81,6 +84,7 @@ class RTCG {
         torusKnot.position.set(-15, 10, 0);
         plane.position.set(0, 0, -10);
         plane.rotation.set(-180, 0, 0);
+        this.setLightPosFirstTime();
     }
     //2.RenderingderSzene
     render() {
@@ -96,6 +100,12 @@ class RTCG {
 
         lightPosX = document.getElementById('lightPosX');
         lightPosX.addEventListener('change', this.changeLightPosX);
+
+        lightPosY = document.getElementById('lightPosY');
+        lightPosY.addEventListener('change', this.changeLightPosY);
+
+        lightPosZ = document.getElementById('lightPosZ');
+        lightPosZ.addEventListener('change', this.changeLightPosZ);
 
         alphaVal = document.getElementById('alphaVal');
         alphaVal.addEventListener('change', this.changeAlphaValue);
@@ -126,6 +136,16 @@ class RTCG {
         cube.material.uniforms.lightPos.value = light.position;
         torusKnot.material.uniforms.lightPos.value = light.position;
         light.position.set(parseInt(lightPosX.value), light.position.y, light.position.z);
+    }
+    changeLightPosY() {
+        cube.material.uniforms.lightPos.value = light.position;
+        torusKnot.material.uniforms.lightPos.value = light.position;
+        light.position.set( light.position.x, parseInt(lightPosY.value), light.position.z);
+    }
+    changeLightPosZ() {
+        cube.material.uniforms.lightPos.value = light.position;
+        torusKnot.material.uniforms.lightPos.value = light.position;
+        light.position.set( light.position.x, light.position.y, parseInt(lightPosZ.value));
     }
     changeLightColor() {
 
