@@ -2,13 +2,14 @@ import {PerspectiveCamera} from'https://unpkg.com/three@0.127.0/build/three.modu
 
 function createCamera(){
     const camera = new PerspectiveCamera(
-        35,//FOV
+        90,//FOV
         1,//AspectRatio
         0.1,//NearClip
         100,//FarClip
         );
         //RückstellungderKamera
-    camera.position.set(0,0,2);
+    camera.position.set(2,2,2);
+    camera.lookAt(0,0,0);
     return camera;
 }
 
