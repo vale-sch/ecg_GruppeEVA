@@ -20,6 +20,8 @@ let alphaVal;
 let intensity;
 let lightInten;
 let lightPosX;
+let lightPosY;
+let lightPosZ;
 let lightColor;
 
 let cube;
@@ -65,23 +67,26 @@ class RTCG {
     createSceneContent() {
 
         light = createLight();
-        light.position.set(10, 21, 0);
+        light.position.set(0, 30, 0);
         helper = new PointLightHelper(light);
         //helper = new CameraHelper(light.shadow.camera);
-        
+
         cube = createCube(light, camera);
         sphere = createSphere(light, camera);
-        sphere.position.set(15,10,0);
+
 
         torusKnot = createTorusKnot();
         plane = createPlane();
 
         cube.castShadow = true;
         torusKnot.castShadow = true;
+        sphere.castShadow = true;
+
         plane.receiveShadow = true;
 
         cube.position.set(0, 10, 0);
-        torusKnot.position.set(-15, 10, 0);
+        torusKnot.position.set(-20, 10, 0);
+        sphere.position.set(20, 10, 0);
         plane.position.set(0, 0, -10);
         plane.rotation.set(-180, 0, 0);
         this.setLightPosFirstTime();
@@ -118,40 +123,44 @@ class RTCG {
     changeColIntensity() {
         cube.material.uniforms.intensity.value = intensity.value;
         torusKnot.material.uniforms.intensity.value = intensity.value;
+        sphere.material.uniforms.intensity.value = intensity.value;
     }
     changeAlphaValue() {
         cube.material.uniforms.aValue.value = alphaVal.value;
         torusKnot.material.uniforms.aValue.value = alphaVal.value;
+        sphere.material.uniforms.aValue.value = alphaVal.value;
     }
     changeLightIntensity() {
         light.intensity = lightInten.value;
         cube.material.uniforms.lightIntensity.value = light.intensity;
         torusKnot.material.uniforms.lightIntensity.value = light.intensity;
+        sphere.material.uniforms.lightIntensity.value = light.intensity;
     }
     setLightPosFirstTime() {
         cube.material.uniforms.lightPos.value = light.position;
         torusKnot.material.uniforms.lightPos.value = light.position;
+        sphere.material.uniforms.lightPos.value = light.position;
     }
     changeLightPosX() {
         cube.material.uniforms.lightPos.value = light.position;
         torusKnot.material.uniforms.lightPos.value = light.position;
+        sphere.material.uniforms.lightPos.value = light.position;
         light.position.set(parseInt(lightPosX.value), light.position.y, light.position.z);
     }
     changeLightPosY() {
         cube.material.uniforms.lightPos.value = light.position;
         torusKnot.material.uniforms.lightPos.value = light.position;
-        light.position.set( light.position.x, parseInt(lightPosY.value), light.position.z);
+        sphere.material.uniforms.lightPos.value = light.position;
+        light.position.set(light.position.x, parseInt(lightPosY.value), light.position.z);
     }
     changeLightPosZ() {
         cube.material.uniforms.lightPos.value = light.position;
         torusKnot.material.uniforms.lightPos.value = light.position;
-        light.position.set( light.position.x, light.position.y, parseInt(lightPosZ.value));
+        sphere.material.uniforms.lightPos.value = light.position;
+        light.position.set(light.position.x, light.position.y, parseInt(lightPosZ.value));
     }
     changeLightColor() {
-
         light.color = hexToRgb(lightColor.value);
-
-        console.log(light.color);
     }
 
 }

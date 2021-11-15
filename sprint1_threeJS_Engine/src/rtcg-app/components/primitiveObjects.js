@@ -37,7 +37,7 @@ function createCube(light, camera) {
             vec3 lightPosModelView = vec3(vec4(lightPos, 1.0));
             //hard code red diffuse
             float diffuseValue = dot(normalize(normalInterp), normalize(position-lightPos));
-            vec4 diffuseColor = vec4(vec3(1,0,0) * diffuseValue, 1);
+            vec4 diffuseColor = vec4(vec3(0,1,1) * diffuseValue, 1);
             //hard code green spec
 
             vec3 vertexToCameraDirection = cameraPos - position;
@@ -67,7 +67,7 @@ function createCube(light, camera) {
                 float gValue = cos(colorX * colorY);
                 float bValue = tan(colorX * colorY);
         
-                gl_FragColor = fragColor;
+                gl_FragColor = fragColor * aValue;
 
                 //gl_FragColor = vec4(rValue* fragColor.x, gValue* fragColor.y, bValue* fragColor.z, aValue) ;          
             }    
@@ -143,7 +143,7 @@ function createTorusKnot() {
     return sphere;
 }
 function createPlane() {
-    const geometry = new PlaneGeometry(60, 60);
+    const geometry = new PlaneGeometry(80, 80);
     const material = new MeshPhongMaterial({ color: 'grey', side: DoubleSide });
 
     const plane = new Mesh(geometry, material);
@@ -234,7 +234,7 @@ function createSphere(light, camera) {
                 float gValue = cos(colorX * colorY);
                 float bValue = tan(colorX * colorY);
         
-                gl_FragColor = fragColor;
+                gl_FragColor = fragColor * aValue;
 
                 //gl_FragColor = vec4(rValue* fragColor.x, gValue* fragColor.y, bValue* fragColor.z, aValue) ;          
             }    

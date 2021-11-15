@@ -8,7 +8,7 @@ function createCamera() {
         100,//FarClip
     );
     //RückstellungderKamera
-    camera.position.set(0, 20, 75);
+    camera.position.set(0, 15, 75);
     return camera;
 }
 
