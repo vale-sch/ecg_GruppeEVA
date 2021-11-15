@@ -55,10 +55,11 @@ class RTCG {
         animator = new Animator(this.render);
         animator.add(cube);
         animator.add(torusKnot);
-        animator.add(plane);
+        animator.add(sphere);
 
         animator.addContinuousAnimation(cube, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(torusKnot, "rotate", { x: 1, y: 1 });
+        animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
         animator.start();
 
         this.getSliders();
