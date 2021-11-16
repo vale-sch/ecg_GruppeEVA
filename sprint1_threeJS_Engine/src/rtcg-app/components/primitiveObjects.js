@@ -13,6 +13,7 @@ function createCube(light, camera) {
             resolution: { value: new Vector2() },
             lightPos: new Uniform(light.position),
             cameraPos: new Uniform(camera.position),
+            positionOffset: new Uniform(new Vector3(0, 0, 0)),
             intensity: { value: 0.0016 },
             lightIntensity: { value: 1.0 },
             aValue: { value: 1.0 }
@@ -159,14 +160,14 @@ function createSphere(light, camera) {
         transparent: true,
         uniforms: {
 
-           // time: { value: 1.0 },
+            // time: { value: 1.0 },
             //resolution: { value: new Vector2() },
             lightPos: new Uniform(light.position),
             cameraPos: new Uniform(camera.position),
-            intensity:  new Uniform(0.0016),
+            intensity: new Uniform(0.0016),
             lightIntensity: new Uniform(1.0),
             aValue: new Uniform(1.0),
-            positionOffset: new Uniform(new Vector3(20,10,0)),
+            positionOffset: new Uniform(new Vector3(20, 10, 0)),
             lightColor: new Uniform(light.color),
 
         },
