@@ -96,7 +96,6 @@ function createTorusKnot() {
             lightPosX: { value: 0.0 },
             aValue: { value: 1.0 }
 
-
         },
 
         vertexShader: `
@@ -153,68 +152,73 @@ function createPlane() {
 
 function createSphere(light, camera) {
     //ERstellungderGeometrie
-    const geometry = new SphereGeometry(5, 32, 32);
+    const geometry = new SphereGeometry(5, 128, 128);
 
     //ERstellungdesStandardBasismaterials
     const material = new ShaderMaterial({
         transparent: true,
         uniforms: {
 
-            time: { value: 1.0 },
-            resolution: { value: new Vector2() },
+           // time: { value: 1.0 },
+            //resolution: { value: new Vector2() },
             lightPos: new Uniform(light.position),
             cameraPos: new Uniform(camera.position),
-            intensity: { value: 0.0016 },
-            lightIntensity: { value: 1.0 },
-            aValue: { value: 1.0 }
+            intensity:  new Uniform(0.0016),
+            lightIntensity: new Uniform(1.0),
+            aValue: new Uniform(1.0),
+            positionOffset: new Uniform(new Vector3(20,10,0)),
+            lightColor: new Uniform(light.color),
 
         },
 
         vertexShader: `
-        uniform vec3 lightPos;
-        uniform vec3 cameraPos;
-        uniform float lightIntensity;
-        varying vec3 vertPos;
-        varying vec4 fragColor;
+            uniform vec3 lightPos;
+            uniform vec3 lightColor;
+            uniform vec3 cameraPos;
+            uniform vec3 positionOffset;
+            uniform float lightIntensity;
+            varying vec4 fragColor;
+            varying vec3 actualPosition;
 
-
-
-        vec4 getDiffuseColor(vec3 normalInterp);
-        vec4 getSpecularColor(vec3 normalInterp);
-        vec3 getIdealReflexionVec(vec3 normalInterp);
-        
-        void main(){
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            vec3 normalInterp = -1.*(normalMatrix * normal);
-
-            vec4 diffuseColor = getDiffuseColor(normalInterp);
-            vec4 specularColor = getSpecularColor(normalInterp);
-
-            fragColor = diffuseColor + specularColor;
-
-            //fragColor = vec4((normalInterp * diffuse), 1.0 )* lightIntensity;
-        }
-
-        vec4 getDiffuseColor(vec3 normalInterp) {
-            float diffuseValue = dot(normalize(normalInterp), normalize(position-lightPos));
-            return vec4(vec3(1,0,0) * diffuseValue, 1);
-        }
-
-        vec4 getSpecularColor(vec3 normalInterp) {
-            vec4 specularColor = vec4(0,0,0,0);
-            vec3 vertexToCameraDirection = cameraPos - position;
-            float specularValue = dot(normalize(getIdealReflexionVec(normalInterp)), normalize(vertexToCameraDirection));
+            vec4 getDiffuseColor(vec3 normalInterp);
+            vec4 getSpecularColor(vec3 normalInterp);
+            vec3 getIdealReflexionVec(vec3 normalInterp);
             
-            if(specularValue > 0.0){
-                specularColor = vec4(vec3(1,1,1) * specularValue, 1);
-            }
-            return specularColor;
-        }
+            void main(){
 
-        //returns the mirrored vector of the light angle hitting the vertex, which is used for the specular calculation in phong model
-        vec3 getIdealReflexionVec(vec3 normalInterp) {
-            return reflect(position-lightPos, normalInterp);
-        }
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                vec3 normalInterp = (normalMatrix * normal);
+                vec3 lightPos = vec3(modelViewMatrix * vec4(lightPos, 1.0));
+                
+                vec4 diffuseColor = getDiffuseColor(normalInterp);
+                vec4 specularColor = 0.6 * getSpecularColor(normalInterp);
+                vec4 ambientColor = vec4(1,0,0,1);
+
+                fragColor = diffuseColor + specularColor;
+
+                //fragColor = vec4((normalInterp * diffuse), 1.0 )* lightIntensity;
+            }
+
+            vec4 getDiffuseColor(vec3 normalInterp) {
+                float diffuseValue = dot(normalize(-1.*normalInterp), normalize(position-lightPos));
+                return vec4(lightColor * diffuseValue, 1);
+            }
+
+            vec4 getSpecularColor(vec3 normalInterp) {
+                vec4 specularColor = vec4(0,0,0,0);
+                vec3 vertexToCameraDirection = cameraPos - (position+positionOffset);
+                float specularValue = dot(normalize(getIdealReflexionVec(normalInterp)), normalize(vertexToCameraDirection));
+                
+                if(specularValue > 0.0){
+                    specularColor = vec4(vec3(1,1,1) * specularValue, 1);
+                }
+                return specularColor;
+            }
+
+            //returns the mirrored vector of the light angle hitting the vertex, which is used for the specular calculation in phong model
+            vec3 getIdealReflexionVec(vec3 normalInterp) {
+                return reflect((position+positionOffset)-lightPos, normalInterp);
+            }
 
         `,
 
@@ -230,7 +234,7 @@ function createSphere(light, camera) {
                 float colorX = gl_FragCoord.x * intensity * (pi * 2.0);
                 float colorY = gl_FragCoord.y * intensity * (pi * 2.0);
         
-                float rValue = sin(colorX * colorY) ;
+                float rValue = sin(colorX * colorY);
                 float gValue = cos(colorX * colorY);
                 float bValue = tan(colorX * colorY);
         

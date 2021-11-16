@@ -59,7 +59,7 @@ class RTCG {
 
         animator.addContinuousAnimation(cube, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(torusKnot, "rotate", { x: 1, y: 1 });
-        animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
+        //animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
         animator.start();
 
         this.getSliders();
@@ -132,9 +132,6 @@ class RTCG {
         sphere.material.uniforms.aValue.value = alphaVal.value;
     }
     changeLightIntensity() {
-        light.intensity = lightInten.value;
-        cube.material.uniforms.lightIntensity.value = light.intensity;
-        torusKnot.material.uniforms.lightIntensity.value = light.intensity;
         sphere.material.uniforms.lightIntensity.value = light.intensity;
     }
     setLightPosFirstTime() {
@@ -143,24 +140,16 @@ class RTCG {
         sphere.material.uniforms.lightPos.value = light.position;
     }
     changeLightPosX() {
-        cube.material.uniforms.lightPos.value = light.position;
-        torusKnot.material.uniforms.lightPos.value = light.position;
-        sphere.material.uniforms.lightPos.value = light.position;
         light.position.set(parseInt(lightPosX.value), light.position.y, light.position.z);
     }
     changeLightPosY() {
-        cube.material.uniforms.lightPos.value = light.position;
-        torusKnot.material.uniforms.lightPos.value = light.position;
-        sphere.material.uniforms.lightPos.value = light.position;
         light.position.set(light.position.x, parseInt(lightPosY.value), light.position.z);
     }
     changeLightPosZ() {
-        cube.material.uniforms.lightPos.value = light.position;
-        torusKnot.material.uniforms.lightPos.value = light.position;
-        sphere.material.uniforms.lightPos.value = light.position;
         light.position.set(light.position.x, light.position.y, parseInt(lightPosZ.value));
     }
     changeLightColor() {
+        sphere.material.uniforms.lightColor = hexToRgb(lightColor.value);
         light.color = hexToRgb(lightColor.value);
     }
 
