@@ -56,9 +56,13 @@ class RTCG {
         animator.add(cube);
         animator.add(torusKnot);
         animator.add(sphere);
+        animator.add(light);
 
         animator.addContinuousAnimation(cube, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(torusKnot, "rotate", { x: 1, y: 1 });
+
+        animator.addTimeRestrainedAnimation(light, "move", { x: 10, y: 0 }, 2, true, 0);
+        
         //animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
         animator.start();
 
@@ -69,6 +73,7 @@ class RTCG {
 
         light = createLight();
         light.position.set(0, 30, 0);
+
         helper = new PointLightHelper(light);
         //helper = new CameraHelper(light.shadow.camera);
 
@@ -76,7 +81,7 @@ class RTCG {
         sphere = createSphere(light, camera);
 
 
-        torusKnot = createTorusKnot();
+        torusKnot = createTorusKnot(light, camera);
         plane = createPlane();
 
         cube.castShadow = true;
@@ -148,9 +153,9 @@ class RTCG {
     changeLightPosZ() {
         light.position.set(light.position.x, light.position.y, parseInt(lightPosZ.value));
     }
+
     changeLightColor() {
-        sphere.material.uniforms.lightColor = hexToRgb(lightColor.value);
-        light.color = hexToRgb(lightColor.value);
+        light.color.set(lightColor.value);
     }
 
 }
