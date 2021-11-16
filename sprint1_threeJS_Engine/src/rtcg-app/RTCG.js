@@ -5,7 +5,6 @@ import { createLight } from './components/lighting.js';
 import { createRenderer } from './systems/renderer.js';
 import { Animator } from './systems/Animator.js';
 import { Resizer } from './systems/Resizer.js';
-import { CameraHelper } from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 import { PointLightHelper } from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 
 
@@ -90,9 +89,10 @@ class RTCG {
 
         plane.receiveShadow = true;
 
-        cube.position.set(0, 10, 0);
-        torusKnot.position.set(-20, 10, 0);
-        sphere.position.set(20, 10, 0);
+        this.moveObject(cube, 0, 10, 0);
+        this.moveObject(torusKnot, -20, 10, 0);
+        this.moveObject(sphere, 20, 10, 0);
+
         plane.position.set(0, 0, -10);
         plane.rotation.set(-180, 0, 0);
         this.setLightPosFirstTime();
@@ -156,6 +156,15 @@ class RTCG {
 
     changeLightColor() {
         light.color.set(lightColor.value);
+    }
+    moveObject(object, x, y, z) {
+        object.position.set(x, y, z);
+        if (object.material.uniforms.positionOffset) {
+            object.material.uniforms.positionOffset.x = x;
+            object.material.uniforms.positionOffset.y = y;
+            object.material.uniforms.positionOffset.z = z;
+        }
+
     }
 
 }
