@@ -36,7 +36,7 @@
        // gl_Position = projectionMatrix * viewMatrix * modelMatrix * newPos;
         gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position,1.);
         vFragColor = vec4(position.x,position.y,position.z,1.);
-        vNormal = normal;
+        vNormal = normalMatrix * normal;
     }   
 </script>
 
