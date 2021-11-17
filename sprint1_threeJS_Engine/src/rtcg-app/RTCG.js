@@ -132,8 +132,8 @@ class RTCG {
         let raycaster = new Raycaster();
         const intersects = raycaster.intersectObjects(scene.children);
 
-        material.uniforms.Time.value += 0.01;
-        Time += 0.01;
+        material.uniforms.Time.value += 0.02;
+        Time += 0.001;
         let variation = Math.sin(Time) * Math.sin(Time) * 1.5;
 
         for (let i = 0; i < morph.geometry.attributes.position.count; i++) {
@@ -142,8 +142,8 @@ class RTCG {
 
             let dist = distToCube(morph.position,v);
             
-            v.setLength(1 * sMax(dist, variation, 0.5));
-            //vec.setLength(1 * Math.max(dist, variation));
+            v.setLength(1 * sMax(dist, variation, 0.01));
+            //v.setLength(1 * Math.max(dist, variation));
 
             morph.geometry.attributes.position.setXYZ(i,v.x,v.y,v.z);
         }
