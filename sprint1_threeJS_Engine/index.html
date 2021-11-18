@@ -28,6 +28,22 @@
                 oninput="this.nextElementSibling.value = this.value">
             <output>0.0016</output>
 
+
+            <hr>
+            <label><input type=checkbox unchecked enabled id="bRGB">color filter</label>
+            <p> filter red value</p>
+            <input type="range" min="0" max="1" step="0.1" value="1" id="rVal"
+                oninput="this.nextElementSibling.value = this.value">
+            <output>1</output>
+            <p> filter green value</p>
+            <input type="range" min="0" max="1" step="0.1" value="1" id="gVal"
+                oninput="this.nextElementSibling.value = this.value">
+            <output>1</output>
+            <p> filter blue value</p>
+            <input type="range" min="0" max="1" step="0.1" value="1" id="bVal"
+                oninput="this.nextElementSibling.value = this.value">
+            <output>1</output>
+
             <p> filter alpha value</p>
             <label><input type=checkbox unchecked enabled id="bAValue"></label>
             <input type="range" min="0" max="1" step="0.1" value="1" id="alphaVal"
@@ -36,27 +52,7 @@
 
             <hr>
 
-            <label><input type=checkbox unchecked enabled id="bRGBValue">color filter</label>
-            <p> filter red value</p>
-            <input type="range" min="0" max="1" step="0.1" value="1" id="rVal"
-                oninput="this.nextElementSibling.value = this.value">
-            <output>1</output>
 
-            <p> filter green value</p>
-            <label><input type=checkbox unchecked enabledid="bGValue"></label>
-            <input type="range" min="0" max="1" step="0.1" value="1" id="gVal"
-                oninput="this.nextElementSibling.value = this.value">
-            <output>1</output>
-
-            <p> filter blue value</p>
-            <label><input type=checkbox unchecked enabled id="bBValue"></label>
-            <input type="range" min="0" max="1" step="0.1" value="1" id="bVal"
-                oninput="this.nextElementSibling.value = this.value">
-            <output>1</output>
-
-            <br>
-            <label><input type=checkbox unchecked enabled id="bInvertValue">Invert RGB</label>
-            <br>
 
             <p> change brightness value</p>
             <label><input type=checkbox unchecked enabled id="bBrightValue"></label>
@@ -64,7 +60,12 @@
                 oninput="this.nextElementSibling.value = this.value">
             <output>1</output>
 
+            <br>
+            <p>invert RGB Values</p>
+            <label><input type=checkbox unchecked enabled id="bInvertValue"> invert RGB</label>
+            <br>
             <hr>
+            <label><input type=checkbox unchecked enabled id="aniLight"> animate light source</label>
             <p> light intensity</p>
             <input type="range" min="0" max="2" step="0.1" value="1" id="lightInten"
                 oninput="this.nextElementSibling.value = this.value">
@@ -76,9 +77,9 @@
             <output>0</output>
 
             <p> light position y</p>
-            <input type="range" min="10" max="50" step="1" value="30" id="lightPosY"
+            <input type="range" min="0" max="30" step="1" value="15" id="lightPosY"
                 oninput="this.nextElementSibling.value = this.value">
-            <output>30</output>
+            <output>15</output>
 
             <p> light position z</p>
             <input type="range" min="-40" max="40" step="1" value="0" id="lightPosZ"

@@ -22,18 +22,19 @@ let boolStripes;
 let alphaVal;
 let boolAlphaVal;
 
+let boolRGB;
 let rVal;
-let boolRVal;
-
 let gVal;
-let boolGVal;
-
 let bVal;
-let boolBVal;
 
 let brightVal;
 let boolBrightVal;
 
+let boolInvertCol;
+
+let boolAniCam;
+
+let lightIten;
 let lightPosX;
 let lightPosY;
 let lightPosZ;
@@ -89,12 +90,9 @@ class RTCG {
         animator.add(morph);
         animator.add(torusKnot);
         animator.add(sphere);
-        animator.add(light);
 
         animator.addContinuousAnimation(torusKnot, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(morph, "rotate", { x: 1, y: 1 });
-        animator.addTimeRestrainedAnimation(light, "move", { x: 10, y: 0 }, 2, true, 0);
-
         animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
         animator.start();
 
@@ -104,7 +102,7 @@ class RTCG {
     createSceneContent() {
 
         light = createLight();
-        light.position.set(0, 30, 0);
+        light.position.set(0, 15, 0);
 
         helper = new PointLightHelper(light);
 
@@ -126,7 +124,6 @@ class RTCG {
 
         plane.position.set(0, -10, -10);
         plane.rotation.set(-180, 0, 0);
-        this.setLightPosFirstTime();
     }
     //2.RenderingderSzene
     render() {
@@ -141,22 +138,35 @@ class RTCG {
         frequVal.addEventListener('change', this.changeColFrequency);
         boolStripes.addEventListener('change', this.getBoolFrequency);
 
+        boolRGB = document.getElementById('bRGB');
+        rVal = document.getElementById('rVal');
+        gVal = document.getElementById('gVal');
+        bVal = document.getElementById('bVal');
+        boolRGB.addEventListener('change', this.getBoolRGB);
+        rVal.addEventListener('change', this.changeRGBValue);
+        gVal.addEventListener('change', this.changeRGBValue);
+        bVal.addEventListener('change', this.changeRGBValue);
+
         alphaVal = document.getElementById('alphaVal');
         boolAlphaVal = document.getElementById('bAValue');
+        boolAlphaVal.addEventListener('change', this.getBoolAlpha);
         alphaVal.addEventListener('change', this.changeAlphaValue);
 
-        rVal = document.getElementById('rVal');
-        boolRVal = document.getElementById('bRValue');
 
-        gVal = document.getElementById('gVal');
-        boolGVal = document.getElementById('bGValue');
+        brightVal = document.getElementById('brightVal');
+        boolBrightVal = document.getElementById('bBrightValue');
+        boolBrightVal.addEventListener('change', this.getBoolBright);
+        brightVal.addEventListener('change', this.changeBrightValue);
 
-        bVal = document.getElementById('bVal');
-        boolBVal = document.getElementById('bBValue');
+        boolInvertCol = document.getElementById('bInvertValue');
+        boolInvertCol.addEventListener('change', this.getBoolInvert);
 
-        brightVal = document.getElementById('bBrightValue');
-        boolBrightVal = document.getElementById('brightVal');
+        boolAniCam = document.getElementById('aniLight');
+        boolAniCam.addEventListener('change', this.getBoolCam);
 
+
+        lightIten = document.getElementById('lightInten');
+        lightIten.addEventListener('change', this.changeLightIntensity);
 
         lightPosX = document.getElementById('lightPosX');
         lightPosX.addEventListener('change', this.changeLightPosX);
@@ -172,42 +182,77 @@ class RTCG {
         lightColor = document.getElementById('color');
         lightColor.addEventListener('change', this.changeLightColor);
 
-        this.setLightPosFirstTime();
-    }
-    changeColFrequency() {
-
-        morph.material.uniforms.uSlider_Stripe_Frequency.value = frequVal.value;
-
-
-        // torusKnot.material.uniforms.intensity.value = intensity.value;
-        // sphere.material.uniforms.intensity.value = intensity.value;
     }
     getBoolFrequency() {
 
         morph.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
         torusKnot.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
         sphere.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
-        console.log(morph.material.uniforms.value);
-
-        // torusKnot.material.uniforms.intensity.value = intensity.value;
-        // sphere.material.uniforms.intensity.value = intensity.value;
+    }
+    changeColFrequency() {
+        morph.material.uniforms.uSlider_Stripe_Frequency.value = frequVal.value;
+        torusKnot.material.uniforms.uSlider_Stripe_Frequency.value = frequVal.value;
+        sphere.material.uniforms.uSlider_Stripe_Frequency.value = frequVal.value;
+    }
+    getBoolAlpha() {
+        morph.material.uniforms.uToggle_Alpha.value = boolAlphaVal.checked;
+        torusKnot.material.uniforms.uToggle_Alpha.value = boolAlphaVal.checked;
+        sphere.material.uniforms.uToggle_Alpha.value = boolAlphaVal.checked;
     }
     changeAlphaValue() {
-        //morph.material.uniforms.aValue.value = alphaVal.value;
-        // torusKnot.material.uniforms.aValue.value = alphaVal.value;
-        // sphere.material.uniforms.aValue.value = alphaVal.value;
+        morph.material.uniforms.uSlider_Alpha.value = alphaVal.value;
+        torusKnot.material.uniforms.uSlider_Alpha.value = alphaVal.value;
+        sphere.material.uniforms.uSlider_Alpha.value = alphaVal.value;
     }
-    changeLightIntensity() {
-        // sphere.material.uniforms.lightIntensity.value = light.intensity;
-        //morph.material.uniforms.lightIntensity.value = light.intensity;
-        // torusKnot.material.uniforms.lightIntensity.value = light.intensity;
+    getBoolRGB() {
+        morph.material.uniforms.uToggle_Color.value = boolRGB.checked;
+        torusKnot.material.uniforms.uToggle_Color.value = boolRGB.checked;
+        sphere.material.uniforms.uToggle_Color.value = boolRGB.checked;
+    }
+    changeRGBValue() {
+        morph.material.uniforms.uSlider_Red.value = rVal.value;
+        morph.material.uniforms.uSlider_Green.value = gVal.value;
+        morph.material.uniforms.uSlider_Blue.value = bVal.value;
+
+        torusKnot.material.uniforms.uSlider_Red.value = rVal.value;
+        torusKnot.material.uniforms.uSlider_Green.value = gVal.value;
+        torusKnot.material.uniforms.uSlider_Blue.value = bVal.value;
+
+        sphere.material.uniforms.uSlider_Red.value = rVal.value;
+        sphere.material.uniforms.uSlider_Green.value = gVal.value;
+        sphere.material.uniforms.uSlider_Blue.value = bVal.value;
+    }
+
+    getBoolBright() {
+        morph.material.uniforms.uToggle_Brightness.value = boolBrightVal.checked;
+        torusKnot.material.uniforms.uToggle_Brightness.value = boolBrightVal.checked;
+        sphere.material.uniforms.uToggle_Brightness.value = boolBrightVal.checked;
 
     }
-    setLightPosFirstTime() {
-        //morph.material.uniforms.lightPos.value = light.position;
-        // torusKnot.material.uniforms.lightPos.value = light.position;
-        // sphere.material.uniforms.lightPos.value = light.position;
+    changeBrightValue() {
+        morph.material.uniforms.uSlider_Brightness.value = brightVal.value;
+        torusKnot.material.uniforms.uSlider_Brightness.value = brightVal.value;
+        sphere.material.uniforms.uSlider_Brightness.value = brightVal.value;
     }
+
+    getBoolInvert() {
+        morph.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
+        torusKnot.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
+        sphere.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
+    }
+    getBoolCam() {
+        if (boolAniCam.checked) {
+            animator.add(light);
+            animator.addTimeRestrainedAnimation(light, "move", { x: 10, y: 0 }, 2, true, 0);
+        }
+        else
+            animator.remove(light);
+    }
+
+    changeLightIntensity() {
+        light.intensity = lightIten.value;
+    }
+
     changeLightPosX() {
         light.position.set(parseInt(lightPosX.value), light.position.y, light.position.z);
     }
