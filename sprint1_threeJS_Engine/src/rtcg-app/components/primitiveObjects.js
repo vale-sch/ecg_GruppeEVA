@@ -45,15 +45,13 @@ function createCube(light, camera) {
 
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 vec3 normalInterp = (normalMatrix * normal);
-               // vec3 lightPos = vec3(modelViewMatrix * vec4(uLight_Pos, 1.0));
                 
                 vec4 diffuseColor = 0.6 * getDiffuseColor(normalInterp);
                 vec4 specularColor = 0.6 * getSpecularColor(normalInterp);
                 vec4 ambientColor = vec4(uLight_Color,1);
 
                 vColor = diffuseColor + specularColor + ambientColor;
-
-                //vColor = vec4((normalInterp * diffuse), 1.0 )* uLight_Intensity;
+               
             }
 
             vec4 getDiffuseColor(vec3 normalInterp) {
@@ -189,15 +187,12 @@ function createTorusKnot(light, camera) {
 
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 vec3 normalInterp = (normalMatrix * normal);
-               // vec3 lightPos = vec3(modelViewMatrix * vec4(uLight_Pos, 1.0));
                 
                 vec4 diffuseColor = 0.6 * getDiffuseColor(normalInterp);
                 vec4 specularColor = 0.6 * getSpecularColor(normalInterp);
                 vec4 ambientColor = vec4(uLight_Color,1);
 
                 vColor = diffuseColor + specularColor + ambientColor;
-
-                //vColor = vec4((normalInterp * diffuse), 1.0 )* uLight_Intensity;
             }
 
             vec4 getDiffuseColor(vec3 normalInterp) {
@@ -341,15 +336,12 @@ function createSphere(light, camera) {
 
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 vec3 normalInterp = (normalMatrix * normal);
-               // vec3 lightPos = vec3(modelViewMatrix * vec4(uLight_Pos, 1.0));
                 
                 vec4 diffuseColor = 0.6 * getDiffuseColor(normalInterp);
                 vec4 specularColor = 0.6 * getSpecularColor(normalInterp);
                 vec4 ambientColor = vec4(uLight_Color,1);
 
                 vColor = diffuseColor + specularColor + ambientColor;
-
-                //vColor = vec4((normalInterp * diffuse), 1.0 )* uLight_Intensity;
             }
 
             vec4 getDiffuseColor(vec3 normalInterp) {
