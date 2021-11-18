@@ -162,7 +162,7 @@ class RTCG {
         boolInvertCol.addEventListener('change', this.getBoolInvert);
 
         boolAniCam = document.getElementById('aniLight');
-        boolAniCam.addEventListener('change', this.getBoolCam);
+        boolAniCam.addEventListener('change', this.getBoolLightAnimation);
 
 
         lightIten = document.getElementById('lightInten');
@@ -178,13 +178,18 @@ class RTCG {
         lightPosZ.addEventListener('change', this.changeLightPosZ);
 
 
-
         lightColor = document.getElementById('color');
         lightColor.addEventListener('change', this.changeLightColor);
 
+        this.getBoolFrequency();
+        this.getBoolBright();
+        this.getBoolRGB();
+        this.getBoolLightAnimation();
+        this.getBoolAlpha();
+        this.getBoolInvert();
+
     }
     getBoolFrequency() {
-
         morph.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
         torusKnot.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
         sphere.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
@@ -240,7 +245,7 @@ class RTCG {
         torusKnot.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
         sphere.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
     }
-    getBoolCam() {
+    getBoolLightAnimation() {
         if (boolAniCam.checked) {
             animator.add(light);
             animator.addTimeRestrainedAnimation(light, "move", { x: 10, y: 0 }, 2, true, 0);
