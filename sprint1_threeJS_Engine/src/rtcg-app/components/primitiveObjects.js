@@ -29,51 +29,51 @@ function createCube(light, camera) {
         },
 
         vertexShader: `
-            uniform vec3 uLight_Pos;
-            uniform vec3 uLight_Color;
-            uniform vec3 uCamera_Pos;
-            uniform vec3 uPosition_Offset;
-            uniform float uLight_Intensity;
-            varying vec4 vColor;
-            varying vec3 actualPosition;
+        uniform vec3 uLight_Pos;
+        uniform vec3 uLight_Color;
+        uniform vec3 uCamera_Pos;
+        uniform vec3 uPosition_Offset;
+        uniform float uLight_Intensity;
+        varying vec4 vColor;
+        varying vec3 actualPosition;
 
-            vec4 getDiffuseColor(vec3 normalInterp);
-            vec4 getSpecularColor(vec3 normalInterp);
-            vec3 getIdealReflexionVec(vec3 normalInterp);
+        vec4 getDiffuseColor(vec3 normalInterp);
+        vec4 getSpecularColor(vec3 normalInterp);
+        vec3 getIdealReflexionVec(vec3 normalInterp);
+        
+        void main(){
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            vec3 normalInterp = (normalMatrix * normal);
             
-            void main(){
+            vec4 diffuseColor = getDiffuseColor(normalInterp);
+            vec4 specularColor = uLight_Intensity * getSpecularColor(normalInterp);
+            vec4 ambientColor = vec4(uLight_Color,1);
 
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                vec3 normalInterp = (normalMatrix * normal);
-                
-                vec4 diffuseColor = 0.6 * getDiffuseColor(normalInterp);
-                vec4 specularColor = 0.6 * getSpecularColor(normalInterp);
-                vec4 ambientColor = vec4(uLight_Color,1);
+            vColor = diffuseColor + specularColor + ambientColor;
+        }
 
-                vColor = diffuseColor + specularColor + ambientColor;
-               
+        vec4 getDiffuseColor(vec3 normalInterp) {
+            float diffuseValue = dot(normalize(normalInterp), normalize(uLight_Pos-position));
+            return vec4(uLight_Color * diffuseValue, 1);
+        }
+
+        vec4 getSpecularColor(vec3 normalInterp) {
+            vec4 specularColor = vec4(0,0,0,0);
+            vec3 vertexToCameraDirection = uCamera_Pos - (position+uPosition_Offset);
+            float specularValue = dot(normalize(getIdealReflexionVec(normalInterp)), normalize(vertexToCameraDirection));
+            
+            if(specularValue > 0.0){
+                specularColor = vec4(normalize(vec3(0.4,0.4,0.4)) * specularValue, 1);
             }
+            return specularColor;
+        }
 
-            vec4 getDiffuseColor(vec3 normalInterp) {
-                float diffuseValue = dot(normalize(-1.*normalInterp), normalize(position-uLight_Pos));
-                return vec4(uLight_Color * diffuseValue, 1);
-            }
+        //returns the mirrored vector of the light angle hitting the vertex, which is used for the specular calculation in phong model
+        vec3 getIdealReflexionVec(vec3 normalInterp) {
+            return reflect((position+uPosition_Offset)-uLight_Pos, normalInterp);
+        }
 
-            vec4 getSpecularColor(vec3 normalInterp) {
-                vec4 specularColor = vec4(0,0,0,0);
-                vec3 vertexToCameraDirection = uCamera_Pos - (position+uPosition_Offset);
-                float specularValue = dot(normalize(getIdealReflexionVec(normalInterp)), normalize(vertexToCameraDirection));
-                
-                if(specularValue > 0.0){
-                    specularColor = vec4(normalize(vec3(1,1,1)) * specularValue, 1);
-                }
-                return specularColor;
-            }
-
-            //returns the mirrored vector of the light angle hitting the vertex, which is used for the specular calculation in phong model
-            vec3 getIdealReflexionVec(vec3 normalInterp) {
-                return reflect((position+uPosition_Offset)-uLight_Pos, normalInterp);
-            }
 
         `,
 
@@ -171,50 +171,51 @@ function createTorusKnot(light, camera) {
         },
 
         vertexShader: `
-            uniform vec3 uLight_Pos;
-            uniform vec3 uLight_Color;
-            uniform vec3 uCamera_Pos;
-            uniform vec3 uPosition_Offset;
-            uniform float uLight_Intensity;
-            varying vec4 vColor;
-            varying vec3 actualPosition;
+        uniform vec3 uLight_Pos;
+        uniform vec3 uLight_Color;
+        uniform vec3 uCamera_Pos;
+        uniform vec3 uPosition_Offset;
+        uniform float uLight_Intensity;
+        varying vec4 vColor;
+        varying vec3 actualPosition;
 
-            vec4 getDiffuseColor(vec3 normalInterp);
-            vec4 getSpecularColor(vec3 normalInterp);
-            vec3 getIdealReflexionVec(vec3 normalInterp);
+        vec4 getDiffuseColor(vec3 normalInterp);
+        vec4 getSpecularColor(vec3 normalInterp);
+        vec3 getIdealReflexionVec(vec3 normalInterp);
+        
+        void main(){
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            vec3 normalInterp = (normalMatrix * normal);
             
-            void main(){
+            vec4 diffuseColor = getDiffuseColor(normalInterp);
+            vec4 specularColor = uLight_Intensity * getSpecularColor(normalInterp);
+            vec4 ambientColor = vec4(uLight_Color,1);
 
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                vec3 normalInterp = (normalMatrix * normal);
-                
-                vec4 diffuseColor = 0.6 * getDiffuseColor(normalInterp);
-                vec4 specularColor = 0.6 * getSpecularColor(normalInterp);
-                vec4 ambientColor = vec4(uLight_Color,1);
+            vColor = diffuseColor + specularColor + ambientColor;
+        }
 
-                vColor = diffuseColor + specularColor + ambientColor;
+        vec4 getDiffuseColor(vec3 normalInterp) {
+            float diffuseValue = dot(normalize(normalInterp), normalize(uLight_Pos-position));
+            return vec4(uLight_Color * diffuseValue, 1);
+        }
+
+        vec4 getSpecularColor(vec3 normalInterp) {
+            vec4 specularColor = vec4(0,0,0,0);
+            vec3 vertexToCameraDirection = uCamera_Pos - (position+uPosition_Offset);
+            float specularValue = dot(normalize(getIdealReflexionVec(normalInterp)), normalize(vertexToCameraDirection));
+            
+            if(specularValue > 0.0){
+                specularColor = vec4(normalize(vec3(0.4,0.4,0.4)) * specularValue, 1);
             }
+            return specularColor;
+        }
 
-            vec4 getDiffuseColor(vec3 normalInterp) {
-                float diffuseValue = dot(normalize(-1.*normalInterp), normalize(position-uLight_Pos));
-                return vec4(uLight_Color * diffuseValue, 1);
-            }
+        //returns the mirrored vector of the light angle hitting the vertex, which is used for the specular calculation in phong model
+        vec3 getIdealReflexionVec(vec3 normalInterp) {
+            return reflect((position+uPosition_Offset)-uLight_Pos, normalInterp);
+        }
 
-            vec4 getSpecularColor(vec3 normalInterp) {
-                vec4 specularColor = vec4(0,0,0,0);
-                vec3 vertexToCameraDirection = uCamera_Pos - (position+uPosition_Offset);
-                float specularValue = dot(normalize(getIdealReflexionVec(normalInterp)), normalize(vertexToCameraDirection));
-                
-                if(specularValue > 0.0){
-                    specularColor = vec4(normalize(vec3(1,1,1)) * specularValue, 1);
-                }
-                return specularColor;
-            }
-
-            //returns the mirrored vector of the light angle hitting the vertex, which is used for the specular calculation in phong model
-            vec3 getIdealReflexionVec(vec3 normalInterp) {
-                return reflect((position+uPosition_Offset)-uLight_Pos, normalInterp);
-            }
 
         `,
 
@@ -301,8 +302,8 @@ function createSphere(light, camera) {
         uniforms: {
             uLight_Pos: new Uniform(light.position),
             uCamera_Pos: new Uniform(camera.position),
-            uLight_Intensity: new Uniform(1.0),
-            uPosition_Offset: new Uniform(new Vector3(20, 10, 0)),
+            uLight_Intensity: new Uniform(light.intensity),
+            uPosition_Offset: new Uniform(new Vector3(20, 0, 0)),
             uLight_Color: new Uniform(light.color),
 
             uSlider_Red: new Uniform(1.0),
@@ -333,19 +334,18 @@ function createSphere(light, camera) {
             vec3 getIdealReflexionVec(vec3 normalInterp);
             
             void main(){
-
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 vec3 normalInterp = (normalMatrix * normal);
                 
-                vec4 diffuseColor = 0.6 * getDiffuseColor(normalInterp);
-                vec4 specularColor = 0.6 * getSpecularColor(normalInterp);
+                vec4 diffuseColor = getDiffuseColor(normalInterp);
+                vec4 specularColor = uLight_Intensity * getSpecularColor(normalInterp);
                 vec4 ambientColor = vec4(uLight_Color,1);
 
                 vColor = diffuseColor + specularColor + ambientColor;
             }
 
             vec4 getDiffuseColor(vec3 normalInterp) {
-                float diffuseValue = dot(normalize(-1.*normalInterp), normalize(position-uLight_Pos));
+                float diffuseValue = dot(normalize(normalInterp), normalize(uLight_Pos-position));
                 return vec4(uLight_Color * diffuseValue, 1);
             }
 
@@ -355,7 +355,7 @@ function createSphere(light, camera) {
                 float specularValue = dot(normalize(getIdealReflexionVec(normalInterp)), normalize(vertexToCameraDirection));
                 
                 if(specularValue > 0.0){
-                    specularColor = vec4(normalize(vec3(1,1,1)) * specularValue, 1);
+                    specularColor = vec4(normalize(vec3(0.4,0.4,0.4)) * specularValue, 1);
                 }
                 return specularColor;
             }
