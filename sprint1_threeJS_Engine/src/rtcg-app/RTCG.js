@@ -15,9 +15,25 @@ let scene;
 let resizer;
 let animator;
 
+
+let frequVal;
+let boolStripes;
+
 let alphaVal;
-let intensity;
-let lightInten;
+let boolAlphaVal;
+
+let rVal;
+let boolRVal;
+
+let gVal;
+let boolGVal;
+
+let bVal;
+let boolBVal;
+
+let brightVal;
+let boolBrightVal;
+
 let lightPosX;
 let lightPosY;
 let lightPosZ;
@@ -119,11 +135,28 @@ class RTCG {
     }
 
     getSliders() {
-        intensity = document.getElementById('intensity');
-        intensity.addEventListener('change', this.changeColIntensity);
 
-        lightInten = document.getElementById('lightInten');
-        lightInten.addEventListener('change', this.changeLightIntensity);
+        frequVal = document.getElementById('frequency');
+        boolStripes = document.getElementById('bFrequ');
+        frequVal.addEventListener('change', this.changeColFrequency);
+        boolStripes.addEventListener('change', this.getBoolFrequency);
+
+        alphaVal = document.getElementById('alphaVal');
+        boolAlphaVal = document.getElementById('bAValue');
+        alphaVal.addEventListener('change', this.changeAlphaValue);
+
+        rVal = document.getElementById('rVal');
+        boolRVal = document.getElementById('bRValue');
+
+        gVal = document.getElementById('gVal');
+        boolGVal = document.getElementById('bGValue');
+
+        bVal = document.getElementById('bVal');
+        boolBVal = document.getElementById('bBValue');
+
+        brightVal = document.getElementById('bBrightValue');
+        boolBrightVal = document.getElementById('brightVal');
+
 
         lightPosX = document.getElementById('lightPosX');
         lightPosX.addEventListener('change', this.changeLightPosX);
@@ -134,16 +167,28 @@ class RTCG {
         lightPosZ = document.getElementById('lightPosZ');
         lightPosZ.addEventListener('change', this.changeLightPosZ);
 
-        alphaVal = document.getElementById('alphaVal');
-        alphaVal.addEventListener('change', this.changeAlphaValue);
+
 
         lightColor = document.getElementById('color');
         lightColor.addEventListener('change', this.changeLightColor);
 
         this.setLightPosFirstTime();
     }
-    changeColIntensity() {
-        //morph.material.uniforms.intensity.value = intensity.value;
+    changeColFrequency() {
+
+        morph.material.uniforms.uSlider_Stripe_Frequency.value = frequVal.value;
+
+
+        // torusKnot.material.uniforms.intensity.value = intensity.value;
+        // sphere.material.uniforms.intensity.value = intensity.value;
+    }
+    getBoolFrequency() {
+
+        morph.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
+        torusKnot.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
+        sphere.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
+        console.log(morph.material.uniforms.value);
+
         // torusKnot.material.uniforms.intensity.value = intensity.value;
         // sphere.material.uniforms.intensity.value = intensity.value;
     }
