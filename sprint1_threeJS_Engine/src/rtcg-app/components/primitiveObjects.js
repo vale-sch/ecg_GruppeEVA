@@ -54,7 +54,7 @@ function createCube(light, camera) {
         }
 
         vec4 getDiffuseColor(vec3 normalInterp) {
-            float diffuseValue = dot(normalize(-1.*normalInterp), normalize(position-uLight_Pos));
+            float diffuseValue = dot(normalize(normalInterp), normalize(uLight_Pos-position));
             return vec4(uLight_Color * diffuseValue, 1);
         }
 
@@ -71,7 +71,7 @@ function createCube(light, camera) {
 
         //returns the mirrored vector of the light angle hitting the vertex, which is used for the specular calculation in phong model
         vec3 getIdealReflexionVec(vec3 normalInterp) {
-            return reflect(uLight_Pos-(position+uPosition_Offset), normalInterp);
+            return reflect((position+uPosition_Offset)-uLight_Pos, normalInterp);
         }
 
 
@@ -213,7 +213,7 @@ function createTorusKnot(light, camera) {
 
         //returns the mirrored vector of the light angle hitting the vertex, which is used for the specular calculation in phong model
         vec3 getIdealReflexionVec(vec3 normalInterp) {
-            return reflect(uLight_Pos-(position+uPosition_Offset), normalInterp);
+            return reflect((position+uPosition_Offset)-uLight_Pos, normalInterp);
         }
 
 
@@ -338,7 +338,7 @@ function createSphere(light, camera) {
                 vec3 normalInterp = (normalMatrix * normal);
                 
                 vec4 diffuseColor = getDiffuseColor(normalInterp);
-                vec4 specularColor = getSpecularColor(normalInterp);
+                vec4 specularColor = uLight_Intensity * getSpecularColor(normalInterp);
                 vec4 ambientColor = vec4(uLight_Color,1);
 
                 vColor = diffuseColor + specularColor + ambientColor;
@@ -362,7 +362,7 @@ function createSphere(light, camera) {
 
             //returns the mirrored vector of the light angle hitting the vertex, which is used for the specular calculation in phong model
             vec3 getIdealReflexionVec(vec3 normalInterp) {
-                return reflect(uLight_Pos-(position+uPosition_Offset), normalInterp);
+                return reflect((position+uPosition_Offset)-uLight_Pos, normalInterp);
             }
 
         `,
