@@ -5,9 +5,8 @@ function createRenderer() {
 
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    // renderer.shadowMap.enabled = true;
-    // renderer.shadowMap.type = PCFSoftShadowMap;
-
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = PCFSoftShadowMap;
     renderer.outputEncoding = sRGBEncoding;
     renderer.xr.enabled = true;
     document.body.appendChild(renderer.domElement);

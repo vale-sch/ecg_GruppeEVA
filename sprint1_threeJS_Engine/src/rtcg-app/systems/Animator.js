@@ -17,7 +17,6 @@ class Animator {
     add(object) {
         object.animations = { animationStacks: [], animationObjects: [] };
         this.objectsToAnimate.push(object);
-        console.log(this.objectsToAnimate);
 
     }
     remove(object) {
@@ -27,7 +26,6 @@ class Animator {
             if (element == object)
                 this.objectsToAnimate.splice(increment - 1, 1);
         });
-        console.log(this.objectsToAnimate);
     }
     animate(currentFrame) {
         this.deltaTime = currentFrame == this.lastFrame ? currentFrame / 1000 : (currentFrame - this.lastFrame) / 1000;

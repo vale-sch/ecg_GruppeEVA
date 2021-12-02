@@ -2,11 +2,11 @@ body {
     margin: 0;
 }
 
-#scene-container {
+/*#scene-container {
     position: absolute;
     width: 80%;
     height: 80%;
-}
+}*/
 
 #fps-counter {
     position: absolute;
@@ -17,7 +17,11 @@ body {
     color: purple;
     z-index: 10;
 }
-/*#slider-container {
+#slider-container {
+  
+    position: absolute;
+    top: 0%;
+    right: 0%;
     border: solid whitesmoke;
     border-radius: 15px;
     border-width: medium;
@@ -28,10 +32,8 @@ body {
     padding: 1%;
     line-height: 0px;
     padding-right: 1%;
-    position: absolute;
-    top: 0%;
-    right: 0%;
-}*/
+    
+}
 #btn {
     position: absolute;
     bottom: 0%;

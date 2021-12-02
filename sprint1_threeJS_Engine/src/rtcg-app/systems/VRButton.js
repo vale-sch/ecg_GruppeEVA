@@ -9,9 +9,7 @@ var VRButton = {
             var currentSession = null;
 
             function onSessionStarted(session) {
-                console.log(session);
                 console.log(gl);
-
                 session.addEventListener('end', onSessionEnded);
                 gl.xr.setSession(session);
                 button.textContent = 'Exit XR';

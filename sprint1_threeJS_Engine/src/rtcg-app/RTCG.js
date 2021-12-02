@@ -68,13 +68,13 @@ let morph;
 
 class RTCG {
     //1.ErstellungeinerInstanzderRTCG-App
-    constructor(container) {
+    constructor() {
         renderer = createRenderer();
         camera = createCamera();
         scene = createScene();
 
 
-        container.append(renderer.domElement);
+
 
         // resizer = new Resizer(container, camera, renderer, this.render);
 
@@ -87,7 +87,7 @@ class RTCG {
         scene.add(plane);
         scene.add(morph);
 
-        animator = new Animator(this.render);
+        /*animator = new Animator(this.render);
         animator.add(morph);
         animator.add(torusKnot);
         animator.add(sphere);
@@ -95,9 +95,9 @@ class RTCG {
         animator.addContinuousAnimation(torusKnot, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(morph, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
-        animator.start();
-
-        // this.getSliders();
+        animator.start();*/
+        this.animate();
+        this.getSliders();
 
     }
     createSceneContent() {
@@ -127,18 +127,33 @@ class RTCG {
         plane.rotation.set(-180, 0, 0);
     }
     //2.RenderingderSzene
-    render() {
-        if (resizeDisplay()) {
-            console.log("true")
+    /*  render() {
+          if (resizeDisplay) {
+              console.log(renderer);
+              camera.aspect = window.innerWidth / window.innerHeight;
+              camera.updateProjectionMatrix();
+          }
+  
+          renderer.render(scene, camera);
+        
+  
+      }*/
+
+    animate() {
+        renderer.setAnimationLoop(this.render);
+    }
+
+    // DRAW
+    render(time) {
+        time *= 0.001;
+
+        if (resizeDisplay) {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
         }
-        renderer.render(scene, camera);
         morphMesh();
-
+        renderer.render(scene, camera);
     }
-
-
 
     getSliders() {
 
@@ -193,7 +208,7 @@ class RTCG {
         this.getBoolFrequency();
         this.getBoolBright();
         this.getBoolRGB();
-        this.getBoolLightAnimation();
+        //this.getBoolLightAnimation();
         this.getBoolAlpha();
         this.getBoolInvert();
 
@@ -254,14 +269,14 @@ class RTCG {
         torusKnot.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
         sphere.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
     }
-    getBoolLightAnimation() {
+    /*getBoolLightAnimation() {
         if (boolAniCam.checked) {
             animator.add(light);
             animator.addTimeRestrainedAnimation(light, "move", { x: 10, y: 0 }, 2, true, 0);
         }
         else
             animator.remove(light);
-    }
+    }*/
 
     changeLightIntensity() {
         light.intensity = lightIten.value;
