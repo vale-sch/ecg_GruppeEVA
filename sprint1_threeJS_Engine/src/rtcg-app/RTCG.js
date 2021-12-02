@@ -69,13 +69,14 @@ let morph;
 class RTCG {
     //1.ErstellungeinerInstanzderRTCG-App
     constructor(container) {
+        renderer = createRenderer();
         camera = createCamera();
         scene = createScene();
-        renderer = createRenderer();
+
 
         container.append(renderer.domElement);
 
-        resizer = new Resizer(container, camera, renderer, this.render);
+        // resizer = new Resizer(container, camera, renderer, this.render);
 
         this.createSceneContent();
 
@@ -96,7 +97,7 @@ class RTCG {
         animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
         animator.start();
 
-        this.getSliders();
+        // this.getSliders();
 
     }
     createSceneContent() {
@@ -127,9 +128,17 @@ class RTCG {
     }
     //2.RenderingderSzene
     render() {
+        if (resizeDisplay()) {
+            console.log("true")
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        }
         renderer.render(scene, camera);
         morphMesh();
+
     }
+
+
 
     getSliders() {
 
@@ -283,6 +292,17 @@ class RTCG {
 
 
 }
+function resizeDisplay() {
+    const canvas = renderer.domElement;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const needResize = canvas.width != width || canvas.height != height;
+    if (needResize) {
+        renderer.setSize(width, height, false);
+    }
+    return needResize;
+}
+
 function morphMesh() {
     // material.uniforms.Time.value += 0.02;
     Time += 0.005;

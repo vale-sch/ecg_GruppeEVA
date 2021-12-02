@@ -1,5 +1,5 @@
 import * as THREE from './modules/three.module.js';
-import {ARButton} from './ARButton.js';
+import { ARButton } from './ARButton.js';
 
 // global variabes see p.194
 var gl, cube, sphere, light, camera, scene;
@@ -9,14 +9,14 @@ animate();
 
 function init() {
     // create context
-    gl = new THREE.WebGLRenderer({antialias: true});
+    gl = new THREE.WebGLRenderer({ antialias: true });
     gl.setPixelRatio(window.devicePixelRatio);
     gl.setSize(window.innerWidth, window.innerHeight);
     gl.outputEncoding = THREE.sRGBEncoding;
     gl.xr.enabled = true;
     document.body.appendChild(gl.domElement);
     document.body.appendChild(ARButton.createButton(gl));
-    
+
     // create and set the camera
     const angleOfView = 55;
     const aspectRatio = window.innerWidth / window.innerHeight;
@@ -37,7 +37,7 @@ function init() {
     // add fog
     const fog = new THREE.Fog("gray", 1, 90);
     scene.fog = fog;
-    
+
     // GEOMETRY
     // Create the upright plane
     const planeWidth = 256;
@@ -102,7 +102,7 @@ function init() {
         color: 'tan'
     });
 
-    
+
     // LIGHTS
     // directional lighting
     const color = 0xffffff;
@@ -156,10 +156,10 @@ function draw(time) {
     sphere.rotation.y += 0.01;
     sphere.rotation.y += 0.01;
 
-    light.position.x = 20*Math.cos(time);
-    light.position.y = 20*Math.sin(time);
+    light.position.x = 20 * Math.cos(time);
+    light.position.y = 20 * Math.sin(time);
 
-    gl.render(scene, camera);        
+    gl.render(scene, camera);
 }
 
 // UPDATE RESIZE

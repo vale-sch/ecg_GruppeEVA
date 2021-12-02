@@ -1,9 +1,10 @@
 import { PerspectiveCamera } from 'https://unpkg.com/three@0.127.0/build/three.module.js ';
 
 function createCamera() {
+    const aspectRatio = window.innerWidth / window.innerHeight;
     const camera = new PerspectiveCamera(
         45,//FOV
-        1,//AspectRatio
+        aspectRatio,//AspectRatio
         0.1,//NearClip
         100,//FarClip
     );
