@@ -5,7 +5,8 @@ import { createLight } from './components/lighting.js';
 import { createRenderer } from './systems/renderer.js';
 import { Animator } from './systems/Animator.js';
 import { Resizer } from './systems/Resizer.js';
-import { PointLightHelper, Vector3, Matrix3 } from 'https://unpkg.com/three@0.127.0/build/three.module.js';
+import * as HandtrackingVR from './systems/HandtrackingVR.js';
+import { PointLightHelper, Vector3, Matrix3 } from '../../js/three.module.js';
 
 
 
