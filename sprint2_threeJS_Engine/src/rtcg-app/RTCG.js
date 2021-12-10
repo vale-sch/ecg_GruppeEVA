@@ -70,6 +70,7 @@ let morph;
 class RTCG {
     //1.ErstellungeinerInstanzderRTCG-App
     constructor() {
+        /*
         renderer = createRenderer();
         camera = createCamera();
         scene = createScene();
@@ -96,9 +97,10 @@ class RTCG {
         animator.addContinuousAnimation(torusKnot, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(morph, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
-        animator.start();*/
+        animator.start();
         this.animate();
         this.getSliders();
+     */
 
     }
     createSceneContent() {
