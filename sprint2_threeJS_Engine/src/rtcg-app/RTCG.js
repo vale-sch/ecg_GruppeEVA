@@ -3,10 +3,18 @@ import { createCube, createTorusKnot, createPlane, createSphere } from './compon
 import { createScene } from './components/scene.js';
 import { createLight } from './components/lighting.js';
 import { createRenderer } from './systems/renderer.js';
+import {
+    Object3D, Button, Intersectable, HandsInstructionText, OffsetFromCamera,
+    NeedCalibration, Randomizable, Draggable, RandomizerSystem, InstructionSystem,
+    CalibrationSystem, ButtonSystem, DraggableSystem, HandRaySystem
+} from './systems/HandtrackingVR.js';
 import { Animator } from './systems/Animator.js';
-import { Resizer } from './systems/Resizer.js';
-import * as HandtrackingVR from './systems/HandtrackingVR.js';
-import { PointLightHelper, Vector3, Matrix3 } from '../../js/three.module.js';
+import { XRControllerModelFactory } from './systems/XRControllerModelFactory.js';
+import { OculusHandModel } from './systems/OculusHandModel.js';
+import { OculusHandPointerModel } from './systems/OculusHandPointerModel.js';
+import { createText } from './systems/Text2D.js';
+import { World, System, Component, TagComponent, Types } from './systems/ecsy.module.js';
+import * as THREE from '../../js/three.module.js';
 
 
 
@@ -15,7 +23,6 @@ let renderer;
 let scene;
 let resizer;
 let animator;
-
 
 let frequVal;
 let boolStripes;
@@ -32,7 +39,6 @@ let brightVal;
 let boolBrightVal;
 
 let boolInvertCol;
-
 let boolAniCam;
 
 let lightIten;
@@ -51,35 +57,33 @@ let sphere;
 let Time = 0;
 let sideLength = 5;
 let cubeArray =
-    [new Vector3(sideLength / 2, sideLength / 2, sideLength / 2),
-    new Vector3(-sideLength / 2, -sideLength / 2, -sideLength / 2),
-    new Vector3(-sideLength, 0, 0),
-    new Vector3(0, -sideLength, 0),
-    new Vector3(-sideLength, 0, 0),
-    new Vector3(0, 0, -sideLength),
-    new Vector3(0, -sideLength, 0),
-    new Vector3(0, 0, -sideLength),
-    new Vector3(sideLength, 0, 0),
-    new Vector3(0, sideLength, 0),
-    new Vector3(sideLength, 0, 0),
-    new Vector3(0, 0, sideLength),
-    new Vector3(0, sideLength, 0),
-    new Vector3(0, 0, sideLength)];
+    [new THREE.Vector3(sideLength / 2, sideLength / 2, sideLength / 2),
+    new THREE.Vector3(-sideLength / 2, -sideLength / 2, -sideLength / 2),
+    new THREE.Vector3(-sideLength, 0, 0),
+    new THREE.Vector3(0, -sideLength, 0),
+    new THREE.Vector3(-sideLength, 0, 0),
+    new THREE.Vector3(0, 0, -sideLength),
+    new THREE.Vector3(0, -sideLength, 0),
+    new THREE.Vector3(0, 0, -sideLength),
+    new THREE.Vector3(sideLength, 0, 0),
+    new THREE.Vector3(0, sideLength, 0),
+    new THREE.Vector3(sideLength, 0, 0),
+    new THREE.Vector3(0, 0, sideLength),
+    new THREE.Vector3(0, sideLength, 0),
+    new THREE.Vector3(0, 0, sideLength)];
+
 let morph;
 
+const world = new World();
+const clock = new THREE.Clock();
+
 class RTCG {
-    //1.ErstellungeinerInstanzderRTCG-App
+
     constructor() {
-        /*
         renderer = createRenderer();
         camera = createCamera();
         scene = createScene();
-
-
-
-
-        // resizer = new Resizer(container, camera, renderer, this.render);
-
+        createHandVR();
         this.createSceneContent();
 
         scene.add(light);
@@ -89,7 +93,7 @@ class RTCG {
         scene.add(plane);
         scene.add(morph);
 
-        /*animator = new Animator(this.render);
+        animator = new Animator(animate);
         animator.add(morph);
         animator.add(torusKnot);
         animator.add(sphere);
@@ -98,23 +102,41 @@ class RTCG {
         animator.addContinuousAnimation(morph, "rotate", { x: 1, y: 1 });
         animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
         animator.start();
-        this.animate();
+
         this.getSliders();
-     */
+        //morphMesh();
+
+        window.addEventListener('resize', onWindowResize);
+        animate();
 
     }
+
+
     createSceneContent() {
 
         light = createLight();
         light.position.set(0, 15, 0);
 
-        helper = new PointLightHelper(light);
+        helper = new THREE.PointLightHelper(light);
 
         morph = createCube(light, camera);
-        sphere = createSphere(light, camera);
+        const entityM = world.createEntity();
+        entityM.addComponent(Intersectable);
+        entityM.addComponent(Object3D, { object: morph });
+        entityM.addComponent(Draggable);
 
+        sphere = createSphere(light, camera);
+        const entityS = world.createEntity();
+        entityS.addComponent(Intersectable);
+        entityS.addComponent(Object3D, { object: sphere });
+        entityS.addComponent(Draggable);
 
         torusKnot = createTorusKnot(light, camera);
+        const entityT = world.createEntity();
+        entityT.addComponent(Intersectable);
+        entityT.addComponent(Object3D, { object: torusKnot });
+        entityT.addComponent(Draggable);
+
         plane = createPlane();
 
         morph.castShadow = true;
@@ -123,39 +145,11 @@ class RTCG {
 
         plane.receiveShadow = true;
 
-        this.moveObject(torusKnot, -20, 0, 0);
-        this.moveObject(sphere, 20, 0, 0);
-
-        plane.position.set(0, -10, -10);
-        plane.rotation.set(-180, 0, 0);
-    }
-    //2.RenderingderSzene
-    /*  render() {
-          if (resizeDisplay) {
-              console.log(renderer);
-              camera.aspect = window.innerWidth / window.innerHeight;
-              camera.updateProjectionMatrix();
-          }
-  
-          renderer.render(scene, camera);
-        
-  
-      }*/
-
-    animate() {
-        renderer.setAnimationLoop(this.render);
-    }
-
-    // DRAW
-    render(time) {
-        time *= 0.001;
-
-        if (resizeDisplay) {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        }
-        morphMesh();
-        renderer.render(scene, camera);
+        this.moveObject(torusKnot, -1, 0, -2);
+        this.moveObject(sphere, 1, 0, -2);
+        this.moveObject(morph, 0, -0.5, -3);
+        plane.position.set(0, -1, -2);
+        plane.rotation.set(190, 0, 0);
     }
 
     getSliders() {
@@ -211,7 +205,7 @@ class RTCG {
         this.getBoolFrequency();
         this.getBoolBright();
         this.getBoolRGB();
-        //this.getBoolLightAnimation();
+        this.getBoolLightAnimation();
         this.getBoolAlpha();
         this.getBoolInvert();
 
@@ -272,14 +266,14 @@ class RTCG {
         torusKnot.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
         sphere.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
     }
-    /*getBoolLightAnimation() {
+    getBoolLightAnimation() {
         if (boolAniCam.checked) {
             animator.add(light);
             animator.addTimeRestrainedAnimation(light, "move", { x: 10, y: 0 }, 2, true, 0);
         }
         else
             animator.remove(light);
-    }*/
+    }
 
     changeLightIntensity() {
         light.intensity = lightIten.value;
@@ -310,15 +304,28 @@ class RTCG {
 
 
 }
-function resizeDisplay() {
-    const canvas = renderer.domElement;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const needResize = canvas.width != width || canvas.height != height;
-    if (needResize) {
-        renderer.setSize(width, height, false);
-    }
-    return needResize;
+function animate() {
+    renderer.setAnimationLoop(render);
+}
+
+// DRAW
+function render() {
+    const delta = clock.getDelta();
+    const elapsedTime = clock.elapsedTime;
+    renderer.xr.updateCamera(camera);
+    world.execute(delta, elapsedTime);
+
+
+    // morphMesh();
+    renderer.render(scene, camera);
+}
+
+function onWindowResize() {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function morphMesh() {
@@ -327,7 +334,7 @@ function morphMesh() {
     let variation = Math.sin(Time) * Math.sin(Time) * 7.5;
 
     for (let i = 0; i < morph.geometry.attributes.position.count; i++) {
-        let v = new Vector3();
+        let v = new THREE.Vector3();
         v.fromBufferAttribute(morph.geometry.attributes.position, i);
 
         let dist = distToCube(morph.position, v);
@@ -349,14 +356,14 @@ function inRange(v, min, max) {
 }
 
 function planeIntersect(p1, p2, q, u, v) {
-    let a = new Vector3(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
-    let b = new Vector3(p1.x - q.x, p1.y - q.y, p1.z - q.z);
-    let m = new Matrix3()
+    let a = new THREE.Vector3(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
+    let b = new THREE.Vector3(p1.x - q.x, p1.y - q.y, p1.z - q.z);
+    let m = new THREE.Matrix3()
     m.set(a.x, u.x, v.x, a.y, u.y, v.y, a.z, u.z, v.z);
     m.invert();
     b.applyMatrix3(m);
     if (inRange(b.x, 0, 1) && inRange(b.y, 0, 1) && inRange(b.z, 0, 1)) {
-        let intersection = new Vector3(p1.x + b.x * (p2.x - p1.x), p1.y + b.x * (p2.y - p1.y), p1.z + b.x * (p2.z - p1.z));
+        let intersection = new THREE.Vector3(p1.x + b.x * (p2.x - p1.x), p1.y + b.x * (p2.y - p1.y), p1.z + b.x * (p2.z - p1.z));
         return { valid: true, result: b, intersection, distance: p1.distanceTo(intersection) };
     }
     return { valid: false };
@@ -386,5 +393,118 @@ function distToCube(p1, p2) {
 function sMax(a, b, k) {
     return ((a + b) + Math.sqrt((a - b) * (a - b) + k)) / 2;
 }
+function createHandVR() {
 
+    // controllers
+    const controller1 = renderer.xr.getController(0);
+    scene.add(controller1);
+
+    const controller2 = renderer.xr.getController(1);
+    scene.add(controller2);
+
+    const controllerModelFactory = new XRControllerModelFactory();
+
+    // Hand 1
+    const controllerGrip1 = renderer.xr.getControllerGrip(0);
+    controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
+    scene.add(controllerGrip1);
+
+    const hand1 = renderer.xr.getHand(0);
+    hand1.add(new OculusHandModel(hand1));
+    const handPointer1 = new OculusHandPointerModel(hand1, controller1);
+    hand1.add(handPointer1);
+
+    scene.add(hand1);
+
+    // Hand 2
+    const controllerGrip2 = renderer.xr.getControllerGrip(1);
+    controllerGrip2.add(controllerModelFactory.createControllerModel(controllerGrip2));
+    scene.add(controllerGrip2);
+
+    const hand2 = renderer.xr.getHand(1);
+    hand2.add(new OculusHandModel(hand2));
+    const handPointer2 = new OculusHandPointerModel(hand2, controller2);
+    hand2.add(handPointer2);
+    scene.add(hand2);
+
+
+    const menuGeometry = new THREE.PlaneGeometry(0.24, 0.5);
+    const menuMaterial = new THREE.MeshPhongMaterial({
+        opacity: 0,
+        transparent: true,
+    });
+    const menuMesh = new THREE.Mesh(menuGeometry, menuMaterial);
+    menuMesh.position.set(0.4, 1, - 1);
+    menuMesh.rotation.y = - Math.PI / 12;
+    scene.add(menuMesh);
+
+
+    const exitButton = makeButtonMesh(0.2, 0.1, 0.01, 0xff0000);
+    const exitButtonText = createText('exit', 0.06);
+    exitButton.add(exitButtonText);
+    exitButtonText.position.set(0, 0, 0.0051);
+    exitButton.position.set(0, - 0.18, 0);
+    menuMesh.add(exitButton);
+
+    const instructionText = createText('This is a WebXR Hands demo, please explore with hands.', 0.04);
+    instructionText.position.set(0, 1.6, - 0.6);
+    scene.add(instructionText);
+
+    const exitText = createText('Exiting session...', 0.04);
+    exitText.position.set(0, 1.5, - 0.6);
+    exitText.visible = false;
+    scene.add(exitText);
+
+    world
+        .registerComponent(Object3D)
+        .registerComponent(Button)
+        .registerComponent(Intersectable)
+        .registerComponent(HandsInstructionText)
+        .registerComponent(OffsetFromCamera)
+        .registerComponent(NeedCalibration)
+        .registerComponent(Randomizable)
+        .registerComponent(Draggable);
+
+    world
+        .registerSystem(RandomizerSystem)
+        .registerSystem(InstructionSystem, { controllers: [controllerGrip1, controllerGrip2] })
+        .registerSystem(CalibrationSystem, { renderer: renderer, camera: camera })
+        .registerSystem(ButtonSystem)
+        .registerSystem(DraggableSystem)
+        .registerSystem(HandRaySystem, { handPointers: [handPointer1, handPointer2] });
+
+    const menuEntity = world.createEntity();
+    menuEntity.addComponent(Intersectable);
+    menuEntity.addComponent(OffsetFromCamera, { x: 0.4, y: 0, z: - 1 });
+    menuEntity.addComponent(NeedCalibration);
+    menuEntity.addComponent(Object3D, { object: menuMesh });
+
+    const ebEntity = world.createEntity();
+    ebEntity.addComponent(Intersectable);
+    ebEntity.addComponent(Object3D, { object: exitButton });
+    const ebAction = function () {
+
+        exitText.visible = true;
+        setTimeout(function () {
+
+            exitText.visible = false; renderer.xr.getSession().end();
+
+        }, 2000);
+
+    };
+
+    ebEntity.addComponent(Button, { action: ebAction });
+
+    const itEntity = world.createEntity();
+    itEntity.addComponent(HandsInstructionText);
+    itEntity.addComponent(Object3D, { object: instructionText });
+}
+function makeButtonMesh(x, y, z, color) {
+
+    const geometry = new THREE.BoxGeometry(x, y, z);
+    const material = new THREE.MeshPhongMaterial({ color: color });
+    const buttonMesh = new THREE.Mesh(geometry, material);
+    return buttonMesh;
+
+}
 export { RTCG };

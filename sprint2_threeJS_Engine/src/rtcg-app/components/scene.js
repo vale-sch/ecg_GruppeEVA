@@ -1,7 +1,7 @@
-import {Color,Scene} from 'https://unpkg.com/three@0.127.0/build/three.module.js ';
-function createScene(){
+import { Color, Scene } from '../../../js/three.module.js';
+function createScene() {
     const scene = new Scene();
-    scene.background = new Color('skyblue');
+    scene.background = new Color(0x444444);;
     return scene;
 }
-export{createScene};
+export { createScene };

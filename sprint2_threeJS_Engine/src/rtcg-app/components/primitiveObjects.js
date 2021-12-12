@@ -1,8 +1,8 @@
-import { Uniform, BoxBufferGeometry, TorusKnotGeometry, SphereGeometry, Mesh, PlaneGeometry, MeshPhongMaterial, ShaderMaterial, Vector2, Vector3, DoubleSide } from 'https://unpkg.com/three@0.127.0/build/three.module.js ';
+import { Uniform, BoxBufferGeometry, TorusKnotGeometry, SphereGeometry, Mesh, PlaneGeometry, MeshPhongMaterial, ShaderMaterial, Vector2, Vector3, DoubleSide } from '../../../js/three.module.js';
 
 function createCube(light, camera) {
     //ERstellungderGeometrie
-    const geometry = new BoxBufferGeometry(10, 10, 10, 7, 7, 7);
+    const geometry = new BoxBufferGeometry(0.2, 0.2, 0.2);
 
     //ERstellungdesStandardBasismaterials
     const material = new ShaderMaterial({
@@ -143,7 +143,7 @@ function createCube(light, camera) {
 
 function createTorusKnot(light, camera) {
     //ERstellungderGeometrie
-    const geometry = new TorusKnotGeometry(6, 2, 60, 8);
+    const geometry = new TorusKnotGeometry(0.15, 0.05, 60, 8);
 
 
     //ERstellungdesStandardBasismaterials
@@ -284,7 +284,7 @@ function createTorusKnot(light, camera) {
     return sphere;
 }
 function createPlane() {
-    const geometry = new PlaneGeometry(80, 80);
+    const geometry = new PlaneGeometry(5, 5);
     const material = new MeshPhongMaterial({ color: 'grey', side: DoubleSide });
 
     const plane = new Mesh(geometry, material);
@@ -294,7 +294,7 @@ function createPlane() {
 
 function createSphere(light, camera) {
     //ERstellungderGeometrie
-    const geometry = new SphereGeometry(5, 128, 128);
+    const geometry = new SphereGeometry(0.15, 128, 128);
 
     //ERstellungdesStandardBasismaterials
     const material = new ShaderMaterial({

@@ -1,31 +1,22 @@
-import * as THREE from '../../../js/three.module.js';
-import { VRButton } from '../systems/VRButton.js';
-import { XRControllerModelFactory } from './XRControllerModelFactory.js';
-import { OculusHandModel } from './OculusHandModel.js';
-import { OculusHandPointerModel } from './OculusHandPointerModel.js';
-import { createText } from './Text2D.js';
-
-import { World, System, Component, TagComponent, Types } from './ecsy.module.js';
+import { System, Component, TagComponent, Types } from './ecsy.module.js';
 
 class Object3D extends Component { }
-
+export { Object3D };
 Object3D.schema = {
     object: { type: Types.Ref }
 };
 
 class Button extends Component { }
-
 Button.schema = {
     // button states: [none, hovered, pressed]
     currState: { type: Types.String, default: 'none' },
     prevState: { type: Types.String, default: 'none' },
     action: { type: Types.Ref, default: () => { } }
 };
-
+export { Button };
 class ButtonSystem extends System {
 
     execute( /*delta, time*/) {
-
         this.queries.buttons.results.forEach(entity => {
 
             const button = entity.getMutableComponent(Button);
@@ -56,7 +47,7 @@ class ButtonSystem extends System {
     }
 
 }
-
+export { ButtonSystem };
 ButtonSystem.queries = {
     buttons: {
         components: [Button]
@@ -64,7 +55,7 @@ ButtonSystem.queries = {
 };
 
 class Draggable extends Component { }
-
+export { Draggable };
 Draggable.schema = {
     // draggable states: [detached, hovered, to-be-attached, attached, to-be-detached]
     state: { type: Types.String, default: 'none' },
@@ -106,7 +97,7 @@ class DraggableSystem extends System {
     }
 
 }
-
+export { DraggableSystem };
 DraggableSystem.queries = {
     draggable: {
         components: [Draggable]
@@ -114,7 +105,7 @@ DraggableSystem.queries = {
 };
 
 class Intersectable extends TagComponent { }
-
+export { Intersectable };
 class HandRaySystem extends System {
 
     init(attributes) {
@@ -204,7 +195,7 @@ class HandRaySystem extends System {
     }
 
 }
-
+export { HandRaySystem };
 HandRaySystem.queries = {
     intersectable: {
         components: [Intersectable]
@@ -212,6 +203,8 @@ HandRaySystem.queries = {
 };
 
 class HandsInstructionText extends TagComponent { }
+
+export { HandsInstructionText };
 
 class InstructionSystem extends System {
 
@@ -244,7 +237,7 @@ class InstructionSystem extends System {
     }
 
 }
-
+export { InstructionSystem };
 InstructionSystem.queries = {
     instructionTexts: {
         components: [HandsInstructionText]
@@ -252,7 +245,7 @@ InstructionSystem.queries = {
 };
 
 class OffsetFromCamera extends Component { }
-
+export { OffsetFromCamera };
 OffsetFromCamera.schema = {
     x: { type: Types.Number, default: 0 },
     y: { type: Types.Number, default: 0 },
@@ -260,7 +253,7 @@ OffsetFromCamera.schema = {
 };
 
 class NeedCalibration extends TagComponent { }
-
+export { NeedCalibration };
 class CalibrationSystem extends System {
 
     init(attributes) {
@@ -291,7 +284,7 @@ class CalibrationSystem extends System {
     }
 
 }
-
+export { CalibrationSystem };
 CalibrationSystem.queries = {
     needCalibration: {
         components: [NeedCalibration]
@@ -299,7 +292,7 @@ CalibrationSystem.queries = {
 };
 
 class Randomizable extends TagComponent { }
-
+export { Randomizable };
 class RandomizerSystem extends System {
 
     init( /*attributes*/) {
@@ -340,232 +333,12 @@ class RandomizerSystem extends System {
     }
 
 }
-
+export { RandomizerSystem };
 RandomizerSystem.queries = {
     randomizable: {
         components: [Randomizable]
     }
 };
 
-const world = new World();
-const clock = new THREE.Clock();
-let camera, scene, renderer;
 
-init();
-animate();
-
-function makeButtonMesh(x, y, z, color) {
-
-    const geometry = new THREE.BoxGeometry(x, y, z);
-    const material = new THREE.MeshPhongMaterial({ color: color });
-    const buttonMesh = new THREE.Mesh(geometry, material);
-    return buttonMesh;
-
-}
-
-function init() {
-
-    const container = document.createElement('div');
-    document.body.appendChild(container);
-
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x444444);
-
-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 10);
-    camera.position.set(0, 1.2, 0.3);
-
-    scene.add(new THREE.HemisphereLight(0x808080, 0x606060));
-
-    const light = new THREE.DirectionalLight(0xffffff);
-    light.position.set(0, 6, 0);
-    light.castShadow = true;
-    light.shadow.camera.top = 2;
-    light.shadow.camera.bottom = - 2;
-    light.shadow.camera.right = 2;
-    light.shadow.camera.left = - 2;
-    light.shadow.mapSize.set(4096, 4096);
-    scene.add(light);
-
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.outputEncoding = THREE.sRGBEncoding;
-    renderer.shadowMap.enabled = true;
-    renderer.xr.enabled = true;
-    renderer.xr.cameraAutoUpdate = false;
-
-    container.appendChild(renderer.domElement);
-
-    document.body.appendChild(VRButton.createButton(renderer));
-
-    // controllers
-    const controller1 = renderer.xr.getController(0);
-    scene.add(controller1);
-
-    const controller2 = renderer.xr.getController(1);
-    scene.add(controller2);
-
-    const controllerModelFactory = new XRControllerModelFactory();
-
-    // Hand 1
-    const controllerGrip1 = renderer.xr.getControllerGrip(0);
-    controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
-    scene.add(controllerGrip1);
-
-    const hand1 = renderer.xr.getHand(0);
-    hand1.add(new OculusHandModel(hand1));
-    const handPointer1 = new OculusHandPointerModel(hand1, controller1);
-    hand1.add(handPointer1);
-
-    scene.add(hand1);
-
-    // Hand 2
-    const controllerGrip2 = renderer.xr.getControllerGrip(1);
-    controllerGrip2.add(controllerModelFactory.createControllerModel(controllerGrip2));
-    scene.add(controllerGrip2);
-
-    const hand2 = renderer.xr.getHand(1);
-    hand2.add(new OculusHandModel(hand2));
-    const handPointer2 = new OculusHandPointerModel(hand2, controller2);
-    hand2.add(handPointer2);
-    scene.add(hand2);
-
-
-    // setup objects in scene and entities
-    const floorGeometry = new THREE.PlaneGeometry(4, 4);
-    const floorMaterial = new THREE.MeshPhongMaterial({ color: 0x222222 });
-    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.rotation.x = - Math.PI / 2;
-    floor.receiveShadow = true;
-    scene.add(floor);
-
-    const menuGeometry = new THREE.PlaneGeometry(0.24, 0.5);
-    const menuMaterial = new THREE.MeshPhongMaterial({
-        opacity: 0,
-        transparent: true,
-    });
-    const menuMesh = new THREE.Mesh(menuGeometry, menuMaterial);
-    menuMesh.position.set(0.4, 1, - 1);
-    menuMesh.rotation.y = - Math.PI / 12;
-    scene.add(menuMesh);
-
-    const resetButton = makeButtonMesh(0.2, 0.1, 0.01, 0x355c7d);
-    const resetButtonText = createText('reset', 0.06);
-    resetButton.add(resetButtonText);
-    resetButtonText.position.set(0, 0, 0.0051);
-    resetButton.position.set(0, - 0.06, 0);
-    menuMesh.add(resetButton);
-
-    const exitButton = makeButtonMesh(0.2, 0.1, 0.01, 0xff0000);
-    const exitButtonText = createText('exit', 0.06);
-    exitButton.add(exitButtonText);
-    exitButtonText.position.set(0, 0, 0.0051);
-    exitButton.position.set(0, - 0.18, 0);
-    menuMesh.add(exitButton);
-
-    const instructionText = createText('This is a WebXR Hands demo, please explore with hands.', 0.04);
-    instructionText.position.set(0, 1.6, - 0.6);
-    scene.add(instructionText);
-
-    const exitText = createText('Exiting session...', 0.04);
-    exitText.position.set(0, 1.5, - 0.6);
-    exitText.visible = false;
-    scene.add(exitText);
-
-    world
-        .registerComponent(Object3D)
-        .registerComponent(Button)
-        .registerComponent(Intersectable)
-        .registerComponent(HandsInstructionText)
-        .registerComponent(OffsetFromCamera)
-        .registerComponent(NeedCalibration)
-        .registerComponent(Randomizable)
-        .registerComponent(Draggable);
-
-    world
-        .registerSystem(RandomizerSystem)
-        .registerSystem(InstructionSystem, { controllers: [controllerGrip1, controllerGrip2] })
-        .registerSystem(CalibrationSystem, { renderer: renderer, camera: camera })
-        .registerSystem(ButtonSystem)
-        .registerSystem(DraggableSystem)
-        .registerSystem(HandRaySystem, { handPointers: [handPointer1, handPointer2] });
-
-    for (let i = 0; i < 20; i++) {
-
-        const object = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, 0.15), new THREE.MeshLambertMaterial({ color: 0xffffff }));
-        scene.add(object);
-
-        const entity = world.createEntity();
-        entity.addComponent(Intersectable);
-        entity.addComponent(Randomizable);
-        entity.addComponent(Object3D, { object: object });
-        entity.addComponent(Draggable);
-
-    }
-
-    const menuEntity = world.createEntity();
-    menuEntity.addComponent(Intersectable);
-    menuEntity.addComponent(OffsetFromCamera, { x: 0.4, y: 0, z: - 1 });
-    menuEntity.addComponent(NeedCalibration);
-    menuEntity.addComponent(Object3D, { object: menuMesh });
-
-    const rbEntity = world.createEntity();
-    rbEntity.addComponent(Intersectable);
-    rbEntity.addComponent(Object3D, { object: resetButton });
-    const rbAction = function () {
-
-        world.getSystem(RandomizerSystem).needRandomizing = true;
-
-    };
-
-    rbEntity.addComponent(Button, { action: rbAction });
-
-    const ebEntity = world.createEntity();
-    ebEntity.addComponent(Intersectable);
-    ebEntity.addComponent(Object3D, { object: exitButton });
-    const ebAction = function () {
-
-        exitText.visible = true;
-        setTimeout(function () {
-
-            exitText.visible = false; renderer.xr.getSession().end();
-
-        }, 2000);
-
-    };
-
-    ebEntity.addComponent(Button, { action: ebAction });
-
-    const itEntity = world.createEntity();
-    itEntity.addComponent(HandsInstructionText);
-    itEntity.addComponent(Object3D, { object: instructionText });
-
-    window.addEventListener('resize', onWindowResize);
-
-}
-
-function onWindowResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-}
-
-function animate() {
-
-    renderer.setAnimationLoop(render);
-
-}
-
-function render() {
-
-    const delta = clock.getDelta();
-    const elapsedTime = clock.elapsedTime;
-    renderer.xr.updateCamera(camera);
-    world.execute(delta, elapsedTime);
-    renderer.render(scene, camera);
-
-}
 
