@@ -3,20 +3,11 @@ import { createCube, createTorusKnot, createPlane, createSphere } from './compon
 import { createScene } from './components/scene.js';
 import { createLight } from './components/lighting.js';
 import { createRenderer } from './systems/renderer.js';
-import {
-    Object3D, Button, Intersectable, HandsInstructionText, OffsetFromCamera,
-    NeedCalibration, Randomizable, Draggable, RandomizerSystem, InstructionSystem,
-    CalibrationSystem, ButtonSystem, DraggableSystem, HandRaySystem
-} from './systems/HandtrackingVR.js';
-import { Animator } from './systems/Animator.js';
-import { XRControllerModelFactory } from './systems/XRControllerModelFactory.js';
-import { OculusHandModel } from './systems/OculusHandModel.js';
-import { OculusHandPointerModel } from './systems/OculusHandPointerModel.js';
-import { createText } from './systems/Text2D.js';
-import { World, System, Component, TagComponent, Types } from './systems/ecsy.module.js';
+import { HandtrackingUtils, createDraggableObject, world } from '../rtcg-app/systems/VRUtils/HandtrackingUtils.js'
 import * as THREE from '../../js/three.module.js';
+import { Animator } from './systems/Animator.js';
 
-
+const clock = new THREE.Clock();
 
 let camera;
 let renderer;
@@ -73,9 +64,8 @@ let cubeArray =
     new THREE.Vector3(0, 0, sideLength)];
 
 let morph;
+let htU;
 
-const world = new World();
-const clock = new THREE.Clock();
 
 class RTCG {
 
@@ -83,7 +73,7 @@ class RTCG {
         renderer = createRenderer();
         camera = createCamera();
         scene = createScene();
-        createHandVR();
+        htU = new HandtrackingUtils(scene, renderer, camera);
         this.createSceneContent();
 
         scene.add(light);
@@ -104,7 +94,7 @@ class RTCG {
         animator.start();
 
         this.getSliders();
-        //morphMesh();
+        morphMesh();
 
         window.addEventListener('resize', onWindowResize);
         animate();
@@ -120,22 +110,14 @@ class RTCG {
         helper = new THREE.PointLightHelper(light);
 
         morph = createCube(light, camera);
-        const entityM = world.createEntity();
-        entityM.addComponent(Intersectable);
-        entityM.addComponent(Object3D, { object: morph });
-        entityM.addComponent(Draggable);
+        createDraggableObject(morph);
 
         sphere = createSphere(light, camera);
-        const entityS = world.createEntity();
-        entityS.addComponent(Intersectable);
-        entityS.addComponent(Object3D, { object: sphere });
-        entityS.addComponent(Draggable);
+        createDraggableObject(sphere);
+
 
         torusKnot = createTorusKnot(light, camera);
-        const entityT = world.createEntity();
-        entityT.addComponent(Intersectable);
-        entityT.addComponent(Object3D, { object: torusKnot });
-        entityT.addComponent(Draggable);
+        createDraggableObject(torusKnot);
 
         plane = createPlane();
 
@@ -393,118 +375,5 @@ function distToCube(p1, p2) {
 function sMax(a, b, k) {
     return ((a + b) + Math.sqrt((a - b) * (a - b) + k)) / 2;
 }
-function createHandVR() {
 
-    // controllers
-    const controller1 = renderer.xr.getController(0);
-    scene.add(controller1);
-
-    const controller2 = renderer.xr.getController(1);
-    scene.add(controller2);
-
-    const controllerModelFactory = new XRControllerModelFactory();
-
-    // Hand 1
-    const controllerGrip1 = renderer.xr.getControllerGrip(0);
-    controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
-    scene.add(controllerGrip1);
-
-    const hand1 = renderer.xr.getHand(0);
-    hand1.add(new OculusHandModel(hand1));
-    const handPointer1 = new OculusHandPointerModel(hand1, controller1);
-    hand1.add(handPointer1);
-
-    scene.add(hand1);
-
-    // Hand 2
-    const controllerGrip2 = renderer.xr.getControllerGrip(1);
-    controllerGrip2.add(controllerModelFactory.createControllerModel(controllerGrip2));
-    scene.add(controllerGrip2);
-
-    const hand2 = renderer.xr.getHand(1);
-    hand2.add(new OculusHandModel(hand2));
-    const handPointer2 = new OculusHandPointerModel(hand2, controller2);
-    hand2.add(handPointer2);
-    scene.add(hand2);
-
-
-    const menuGeometry = new THREE.PlaneGeometry(0.24, 0.5);
-    const menuMaterial = new THREE.MeshPhongMaterial({
-        opacity: 0,
-        transparent: true,
-    });
-    const menuMesh = new THREE.Mesh(menuGeometry, menuMaterial);
-    menuMesh.position.set(0.4, 1, - 1);
-    menuMesh.rotation.y = - Math.PI / 12;
-    scene.add(menuMesh);
-
-
-    const exitButton = makeButtonMesh(0.2, 0.1, 0.01, 0xff0000);
-    const exitButtonText = createText('exit', 0.06);
-    exitButton.add(exitButtonText);
-    exitButtonText.position.set(0, 0, 0.0051);
-    exitButton.position.set(0, - 0.18, 0);
-    menuMesh.add(exitButton);
-
-    const instructionText = createText('This is a WebXR Hands demo, please explore with hands.', 0.04);
-    instructionText.position.set(0, 1.6, - 0.6);
-    scene.add(instructionText);
-
-    const exitText = createText('Exiting session...', 0.04);
-    exitText.position.set(0, 1.5, - 0.6);
-    exitText.visible = false;
-    scene.add(exitText);
-
-    world
-        .registerComponent(Object3D)
-        .registerComponent(Button)
-        .registerComponent(Intersectable)
-        .registerComponent(HandsInstructionText)
-        .registerComponent(OffsetFromCamera)
-        .registerComponent(NeedCalibration)
-        .registerComponent(Randomizable)
-        .registerComponent(Draggable);
-
-    world
-        .registerSystem(RandomizerSystem)
-        .registerSystem(InstructionSystem, { controllers: [controllerGrip1, controllerGrip2] })
-        .registerSystem(CalibrationSystem, { renderer: renderer, camera: camera })
-        .registerSystem(ButtonSystem)
-        .registerSystem(DraggableSystem)
-        .registerSystem(HandRaySystem, { handPointers: [handPointer1, handPointer2] });
-
-    const menuEntity = world.createEntity();
-    menuEntity.addComponent(Intersectable);
-    menuEntity.addComponent(OffsetFromCamera, { x: 0.4, y: 0, z: - 1 });
-    menuEntity.addComponent(NeedCalibration);
-    menuEntity.addComponent(Object3D, { object: menuMesh });
-
-    const ebEntity = world.createEntity();
-    ebEntity.addComponent(Intersectable);
-    ebEntity.addComponent(Object3D, { object: exitButton });
-    const ebAction = function () {
-
-        exitText.visible = true;
-        setTimeout(function () {
-
-            exitText.visible = false; renderer.xr.getSession().end();
-
-        }, 2000);
-
-    };
-
-    ebEntity.addComponent(Button, { action: ebAction });
-
-    const itEntity = world.createEntity();
-    itEntity.addComponent(HandsInstructionText);
-    itEntity.addComponent(Object3D, { object: instructionText });
-}
-function makeButtonMesh(x, y, z, color) {
-
-    const geometry = new THREE.BoxGeometry(x, y, z);
-    const material = new THREE.MeshPhongMaterial({ color: color });
-    const buttonMesh = new THREE.Mesh(geometry, material);
-    return buttonMesh;
-
-}
 export { RTCG };

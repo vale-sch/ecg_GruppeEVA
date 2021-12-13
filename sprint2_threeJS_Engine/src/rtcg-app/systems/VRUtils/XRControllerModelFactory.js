@@ -3,7 +3,7 @@ import {
 	MeshBasicMaterial,
 	Object3D,
 	SphereGeometry,
-} from '../../../js/three.module.js';
+} from '../../../../js/three.module.js';
 
 import { GLTFLoader } from './GLTFLoader.js';
 
