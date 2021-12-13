@@ -1,6 +1,6 @@
 import {
     Object3D, Button, Intersectable, HandsInstructionText, OffsetFromCamera,
-    NeedCalibration, Randomizable, Draggable, RandomizerSystem, InstructionSystem,
+    NeedCalibration, Draggable, InstructionSystem,
     CalibrationSystem, ButtonSystem, DraggableSystem, HandRaySystem
 } from './HandtrackingCore.js';
 
@@ -86,11 +86,9 @@ class HandtrackingUtils {
             .registerComponent(HandsInstructionText)
             .registerComponent(OffsetFromCamera)
             .registerComponent(NeedCalibration)
-            .registerComponent(Randomizable)
             .registerComponent(Draggable);
 
         world
-            .registerSystem(RandomizerSystem)
             .registerSystem(InstructionSystem, { controllers: [controllerGrip1, controllerGrip2] })
             .registerSystem(CalibrationSystem, { renderer: renderer, camera: camera })
             .registerSystem(ButtonSystem)
