@@ -1,3 +1,4 @@
+import { Plane, Vector3 } from '../../../../js/three.module.js';
 import { System, Component, TagComponent, Types } from './ecsy.module.js';
 
 class Object3D extends Component { }
@@ -97,10 +98,65 @@ class DraggableSystem extends System {
     }
 
 }
+
 export { DraggableSystem };
 DraggableSystem.queries = {
     draggable: {
         components: [Draggable]
+    }
+};
+class Slider extends Component {
+}
+
+export { Slider };
+Slider.schema = {
+    // Slider states: [detached, hovered, to-be-attached, attached, to-be-detached]
+    state: { type: Types.String, default: 'none' },
+    originalParent: { type: Types.Ref, default: null },
+    attachedPointer: { type: Types.Ref, default: null }
+};
+
+class SliderSystem extends System {
+    execute( /*delta, time*/) {
+
+        this.queries.slider.results.forEach(entity => {
+
+            const slider = entity.getMutableComponent(Slider);
+            const object = entity.getComponent(Object3D).object;
+
+            switch (slider.state) {
+                case 'to-be-attached':
+                    slider.state = 'attached';
+                    break;
+                case 'to-be-detached':
+                    slider.state = 'detached';
+                    break;
+                case "attached":
+                    object.scale.set(1.1, 1.1, 1.1);
+                    if (slider.attachedPointer.children[0].position.x > -0.25 && slider.attachedPointer.children[0].position.x < 0.25) {
+                        object.position.x = slider.attachedPointer.children[0].position.x;
+                        entity.objectsWithUniform.forEach((object) => {
+                            object.material.uniforms[entity.uniformName].value = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                        })
+                    }
+                    break;
+
+                default:
+                    object.scale.set(1, 1, 1);
+
+            }
+
+        });
+
+    }
+
+}
+export { SliderSystem };
+
+
+SliderSystem.queries = {
+    slider: {
+        components: [Slider]
     }
 };
 
@@ -132,12 +188,10 @@ class HandRaySystem extends System {
                         intersectingEntity = entity;
 
                     }
-
                 }
 
             });
             if (distance) {
-
                 hp.setCursor(distance);
                 if (intersectingEntity.hasComponent(Button)) {
 
@@ -152,6 +206,27 @@ class HandRaySystem extends System {
 
                     }
 
+                }
+
+                if (intersectingEntity.hasComponent(Slider)) {
+                    const slider = intersectingEntity.getMutableComponent(Slider);
+                    const object = intersectingEntity.getComponent(Object3D).object;
+                    object.scale.set(1.1, 1.1, 1.1);
+                    if (hp.isPinched()) {
+                        if (!hp.isAttached() && slider.state != 'attached') {
+                            slider.state = 'to-be-attached';
+                            slider.attachedPointer = hp;
+                            hp.setAttached(true);
+                        }
+                    }
+                    else {
+                        if (hp.isAttached() && slider.state == 'attached') {
+                            slider.state = 'to-be-detached';
+                            slider.attachedPointer = null;
+                            hp.setAttached(false);
+                            hp.pinched = false;
+                        }
+                    }
                 }
 
                 if (intersectingEntity.hasComponent(Draggable)) {
@@ -183,13 +258,9 @@ class HandRaySystem extends System {
                     }
 
                 }
-
             } else {
-
                 hp.setCursor(1.5);
-
             }
-
         });
 
     }

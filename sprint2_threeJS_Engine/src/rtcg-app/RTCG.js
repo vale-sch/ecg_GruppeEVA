@@ -1,11 +1,11 @@
 import { createCamera } from './components/camera.js';
-import { createCube, createTorusKnot, createPlane, createSphere } from './components/primitiveObjects.js';
+import { createCube, createTorusKnot, createPlane, createSphere, createCone } from './components/primitiveObjects.js';
 import { createScene } from './components/scene.js';
 import { createLight } from './components/lighting.js';
 import { SliderController } from './systems/SliderController.js';
 import { MorphCube, morphMesh } from './systems/MorphCube.js';
 import { createRenderer } from './systems/renderer.js';
-import { HandtrackingUtils, createDraggableObject, world } from '../rtcg-app/systems/VRUtils/HandtrackingUtils.js'
+import { HandtrackingUtils, createDraggableObject, createSliderObject, world, createToggleStripesButton } from '../rtcg-app/systems/VRUtils/HandtrackingUtils.js'
 import * as THREE from '../../js/three.module.js';
 import { Animator } from './systems/Animator.js';
 
@@ -21,10 +21,13 @@ let torusKnot;
 let plane;
 let helper;
 let light;
-let sphere;
+let sphereRedSlider;
+let sphereGreenSlider;
+let sphereBlueSlider;
+let sceneObjects = new Array();
 
-let morph;
-
+let cube;
+let cone;
 
 
 class RTCG {
@@ -37,11 +40,14 @@ class RTCG {
         this.createSceneContent();
         scene.add(light);
         scene.add(helper);
-        scene.add(sphere);
+
         scene.add(torusKnot);
         scene.add(plane);
-        scene.add(morph);
-
+        scene.add(cube);
+        scene.add(cone)
+        scene.add(sphereRedSlider);
+        scene.add(sphereGreenSlider);
+        scene.add(sphereBlueSlider);
         /*animator = new Animator(render);
         animator.add(morph);
         animator.add(torusKnot);
@@ -52,8 +58,8 @@ class RTCG {
         animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
         animator.start();*/
 
-        new SliderController(morph, torusKnot, sphere);
-        new MorphCube(morph);
+        //new SliderController(cube, torusKnot, sphereRedSlider);
+        new MorphCube(cube);
 
         window.addEventListener('resize', onWindowResize);
         animate();
@@ -67,27 +73,39 @@ class RTCG {
 
         helper = new THREE.PointLightHelper(light);
 
-        morph = createCube(light, camera);
-        createDraggableObject(morph);
+        cube = createCube(light, camera);
+        createDraggableObject(cube);
 
-        sphere = createSphere(light, camera);
-        createDraggableObject(sphere);
-
+        cone = createCone(light, camera);
+        createDraggableObject(cone);
 
         torusKnot = createTorusKnot(light, camera);
         createDraggableObject(torusKnot);
 
+        sceneObjects.push(cube, cone, torusKnot);
         plane = createPlane();
-
-        morph.castShadow = true;
+        cube.castShadow = true;
         torusKnot.castShadow = true;
-        sphere.castShadow = true;
-
+        cone.castShadow = true;
         plane.receiveShadow = true;
 
+        sphereRedSlider = createSphere("rgb(255, 0, 0)");
+        sphereGreenSlider = createSphere("rgb(0, 255, 0)");
+        sphereBlueSlider = createSphere("rgb(0, 0, 255)");
+
+        createSliderObject(sphereRedSlider, sceneObjects, "uSlider_Red");
+        createSliderObject(sphereGreenSlider, sceneObjects, "uSlider_Green");
+        createSliderObject(sphereBlueSlider, sceneObjects, "uSlider_Blue");
+        createToggleStripesButton(sceneObjects);
+
         this.moveObject(torusKnot, -1, 0, -2);
-        this.moveObject(sphere, 1, 0, -2);
-        this.moveObject(morph, 0, -0.5, -3);
+        this.moveObject(cube, 0, 0, -2);
+        this.moveObject(cone, 1, 0, -2);
+
+        sphereRedSlider.position.set(-0.25, 1, -0.1);
+        sphereGreenSlider.position.set(-0.25, 0.9, -0.1);
+        sphereBlueSlider.position.set(-0.25, 0.8, -0.1);
+
         plane.position.set(0, -1, -2);
         plane.rotation.set(190, 0, 0);
     }
@@ -113,13 +131,14 @@ function render() {
     const delta = clock.getDelta();
     const elapsedTime = clock.elapsedTime;
     renderer.xr.updateCamera(camera);
+
     world.execute(delta, elapsedTime);
 
     animateObject(torusKnot);
-    animateObject(sphere);
-    animateObject(morph);
+    animateObject(cone);
+    animateObject(cube);
 
-    morphMesh();
+    //morphMesh();
     renderer.render(scene, camera);
 }
 

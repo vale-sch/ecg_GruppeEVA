@@ -1,7 +1,7 @@
 import {
     Object3D, Button, Intersectable, HandsInstructionText, OffsetFromCamera,
-    NeedCalibration, Draggable, InstructionSystem,
-    CalibrationSystem, ButtonSystem, DraggableSystem, HandRaySystem
+    NeedCalibration, Draggable, Slider, InstructionSystem,
+    CalibrationSystem, ButtonSystem, DraggableSystem, SliderSystem, HandRaySystem
 } from './HandtrackingCore.js';
 
 import { XRControllerModelFactory } from './XRControllerModelFactory.js';
@@ -14,7 +14,7 @@ import * as THREE from '../../../../js/three.module.js'
 
 const world = new World();
 
-
+let menuMesh;
 class HandtrackingUtils {
 
     constructor(scene, renderer, camera) {
@@ -58,7 +58,7 @@ class HandtrackingUtils {
             opacity: 0,
             transparent: true,
         });
-        const menuMesh = new THREE.Mesh(menuGeometry, menuMaterial);
+        menuMesh = new THREE.Mesh(menuGeometry, menuMaterial);
         menuMesh.position.set(0.4, 1, - 1);
         menuMesh.rotation.y = - Math.PI / 12;
         scene.add(menuMesh);
@@ -68,9 +68,11 @@ class HandtrackingUtils {
         const exitButtonText = createText('exit', 0.06);
         exitButton.add(exitButtonText);
         exitButtonText.position.set(0, 0, 0.0051);
-        exitButton.position.set(1, - 0.18, -0.5);
+        exitButton.position.set(0.5, - 0.18, 0.25);
         exitButton.rotation.set(0, -45, 0);
         menuMesh.add(exitButton);
+
+
 
 
 
@@ -79,6 +81,19 @@ class HandtrackingUtils {
         exitText.visible = false;
         scene.add(exitText);
 
+        const redSliderText = createText('RED', 0.04);
+        redSliderText.position.set(-0.4, 1, -0.1);
+        scene.add(redSliderText);
+
+        const greenSliderText = createText('GREEN', 0.04);
+        greenSliderText.position.set(-0.4, 0.9, -0.1);
+        scene.add(greenSliderText);
+
+        const blueSliderText = createText('BLUE', 0.04);
+        blueSliderText.position.set(-0.4, 0.8, -0.1);
+        scene.add(blueSliderText);
+
+
         world
             .registerComponent(Object3D)
             .registerComponent(Button)
@@ -86,12 +101,14 @@ class HandtrackingUtils {
             .registerComponent(HandsInstructionText)
             .registerComponent(OffsetFromCamera)
             .registerComponent(NeedCalibration)
-            .registerComponent(Draggable);
+            .registerComponent(Draggable)
+            .registerComponent(Slider);
 
         world
             .registerSystem(InstructionSystem, { controllers: [controllerGrip1, controllerGrip2] })
             .registerSystem(CalibrationSystem, { renderer: renderer, camera: camera })
             .registerSystem(ButtonSystem)
+            .registerSystem(SliderSystem)
             .registerSystem(DraggableSystem)
             .registerSystem(HandRaySystem, { handPointers: [handPointer1, handPointer2] });
 
@@ -120,6 +137,8 @@ class HandtrackingUtils {
 
 
 
+
+
     }
 
 
@@ -130,8 +149,44 @@ function createDraggableObject(object) {
     entity.addComponent(Object3D, { object: object });
     entity.addComponent(Draggable);
 }
+function createToggleStripesButton(objectsWithUniform) {
 
-export { HandtrackingUtils, createDraggableObject, world }
+    const stripesButton = makeButtonMesh(0.2, 0.1, 0.01, 0x000000);
+    const stripesButtonText = createText('toggle stripes', 0.03);
+    stripesButton.add(stripesButtonText);
+    stripesButtonText.position.set(0, 0, 0.0051);
+    stripesButton.position.set(0.5, - 0.3, 0.25);
+    stripesButton.rotation.set(0, -45, 0);
+    menuMesh.add(stripesButton);
+
+    const tSEntity = world.createEntity();
+    tSEntity.addComponent(Intersectable);
+    tSEntity.addComponent(Object3D, { object: stripesButton });
+    tSEntity.objectsWithUniform = objectsWithUniform;
+    const tSAction = function () {
+
+        tSEntity.objectsWithUniform.forEach(object => {
+            if (object.material.uniforms.uToggle_Stripes.value == true)
+                object.material.uniforms.uToggle_Stripes.value = false;
+            else
+                object.material.uniforms.uToggle_Stripes.value = true;
+        });
+
+    };
+
+    tSEntity.addComponent(Button, { action: tSAction });
+}
+
+function createSliderObject(object, objectsWithUniform, uniformName) {
+    const entity = world.createEntity();
+    entity.addComponent(Intersectable);
+    entity.addComponent(Object3D, { object: object });
+    entity.addComponent(Slider);
+    entity.objectsWithUniform = objectsWithUniform;
+    entity.uniformName = uniformName;
+}
+
+export { HandtrackingUtils, createDraggableObject, createSliderObject, createToggleStripesButton, world }
 
 function makeButtonMesh(x, y, z, color) {
 

@@ -93,27 +93,22 @@ class SliderController {
     getBoolFrequency() {
         morph.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
         torusKnot.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
-        sphere.material.uniforms.uToggle_Stripes.value = boolStripes.checked;
     }
     changeColFrequency() {
         morph.material.uniforms.uSlider_Stripe_Frequency.value = frequVal.value;
         torusKnot.material.uniforms.uSlider_Stripe_Frequency.value = frequVal.value;
-        sphere.material.uniforms.uSlider_Stripe_Frequency.value = frequVal.value;
     }
     getBoolAlpha() {
         morph.material.uniforms.uToggle_Alpha.value = boolAlphaVal.checked;
         torusKnot.material.uniforms.uToggle_Alpha.value = boolAlphaVal.checked;
-        sphere.material.uniforms.uToggle_Alpha.value = boolAlphaVal.checked;
     }
     changeAlphaValue() {
         morph.material.uniforms.uSlider_Alpha.value = alphaVal.value;
         torusKnot.material.uniforms.uSlider_Alpha.value = alphaVal.value;
-        sphere.material.uniforms.uSlider_Alpha.value = alphaVal.value;
     }
     getBoolRGB() {
         morph.material.uniforms.uToggle_Color.value = boolRGB.checked;
         torusKnot.material.uniforms.uToggle_Color.value = boolRGB.checked;
-        sphere.material.uniforms.uToggle_Color.value = boolRGB.checked;
     }
     changeRGBValue() {
         morph.material.uniforms.uSlider_Red.value = rVal.value;
@@ -123,28 +118,20 @@ class SliderController {
         torusKnot.material.uniforms.uSlider_Red.value = rVal.value;
         torusKnot.material.uniforms.uSlider_Green.value = gVal.value;
         torusKnot.material.uniforms.uSlider_Blue.value = bVal.value;
-
-        sphere.material.uniforms.uSlider_Red.value = rVal.value;
-        sphere.material.uniforms.uSlider_Green.value = gVal.value;
-        sphere.material.uniforms.uSlider_Blue.value = bVal.value;
     }
 
     getBoolBright() {
         morph.material.uniforms.uToggle_Brightness.value = boolBrightVal.checked;
         torusKnot.material.uniforms.uToggle_Brightness.value = boolBrightVal.checked;
-        sphere.material.uniforms.uToggle_Brightness.value = boolBrightVal.checked;
-
     }
     changeBrightValue() {
         morph.material.uniforms.uSlider_Brightness.value = brightVal.value;
         torusKnot.material.uniforms.uSlider_Brightness.value = brightVal.value;
-        sphere.material.uniforms.uSlider_Brightness.value = brightVal.value;
     }
 
     getBoolInvert() {
         morph.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
         torusKnot.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
-        sphere.material.uniforms.uToggle_Invert.value = boolInvertCol.checked;
     }
     /* getBoolLightAnimation() {
          if (boolAniCam.checked) {
