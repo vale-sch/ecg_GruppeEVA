@@ -1,5 +1,5 @@
 // hier noch der lighting code wie bei der camera.js
-import { PointLight } from 'https://unpkg.com/three@0.127.0/build/three.module.js ';
+import { PointLight } from '../../../js/three.module.js';
 
 
 function createLight(color, intensity) {
