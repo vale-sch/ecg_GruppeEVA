@@ -104,11 +104,11 @@ class RTCG {
         sphereStripesFrequenzySlider = createSphere("rgb(255, 255, 255)");
         sphereLightPosSlider = createSphere("rgb(255, 255, 0)");
 
-        createSliderObject(sphereRedSlider, sceneObjects, "uSlider_Red", light);
-        createSliderObject(sphereGreenSlider, sceneObjects, "uSlider_Green", light);
-        createSliderObject(sphereBlueSlider, sceneObjects, "uSlider_Blue", light);
-        createSliderObject(sphereAlphalider, sceneObjects, "uSlider_Alpha", light);
-        createSliderObject(sphereStripesFrequenzySlider, sceneObjects, "uSlider_Stripe_Frequency", light);
+        createSliderObject(sphereRedSlider, sceneObjects, "uSlider_Red");
+        createSliderObject(sphereGreenSlider, sceneObjects, "uSlider_Green");
+        createSliderObject(sphereBlueSlider, sceneObjects, "uSlider_Blue");
+        createSliderObject(sphereAlphalider, sceneObjects, "uSlider_Alpha");
+        createSliderObject(sphereStripesFrequenzySlider, sceneObjects, "uSlider_Stripe_Frequency");
         createSliderObject(sphereLightPosSlider, sceneObjects, "uLight_Pos", light);
 
         createColorButton(sceneObjects);

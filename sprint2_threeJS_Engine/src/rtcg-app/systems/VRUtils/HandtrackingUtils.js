@@ -250,7 +250,8 @@ function createSliderObject(object, objectsWithUniform, uniformName, light) {
     entity.addComponent(Slider);
     entity.objectsWithUniform = objectsWithUniform;
     entity.uniformName = uniformName;
-    entity.light = light;
+    if (light)
+        entity.light = light;
 }
 
 export { HandtrackingUtils, createDraggableObject, createSliderObject, createToggleStripesButton, createInvertButton, createColorButton, world }
