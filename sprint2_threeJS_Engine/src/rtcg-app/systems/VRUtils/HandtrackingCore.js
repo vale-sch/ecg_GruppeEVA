@@ -133,11 +133,39 @@ class SliderSystem extends System {
                     break;
                 case "attached":
                     object.scale.set(1.1, 1.1, 1.1);
+
                     if (slider.attachedPointer.children[0].position.x > -0.25 && slider.attachedPointer.children[0].position.x < 0.25) {
                         object.position.x = slider.attachedPointer.children[0].position.x;
-                        entity.objectsWithUniform.forEach((object) => {
-                            object.material.uniforms[entity.uniformName].value = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
-                        })
+                        if (entity.uniformName == "uSlider_Red" || entity.uniformName == "uSlider_Green" || entity.uniformName == "uSlider_Blue" || entity.uniformName == "uSlider_Alpha") {
+                            if (entity.uniformName == "uSlider_Red") {
+                                object.material.color.r = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                            }
+                            if (entity.uniformName == "uSlider_Green") {
+                                object.material.color.g = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                            }
+                            if (entity.uniformName == "uSlider_Blue") {
+                                object.material.color.b = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                            }
+                            if (entity.uniformName == "uSlider_Alpha") {
+                                object.material.opacity = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                            }
+                            entity.objectsWithUniform.forEach((object) => {
+                                object.material.uniforms[entity.uniformName].value = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                            })
+
+                        }
+                        if (entity.uniformName == "uSlider_Stripe_Frequency") {
+                            entity.objectsWithUniform.forEach((object) => {
+                                object.material.uniforms[entity.uniformName].value = (slider.attachedPointer.children[0].position.x + 0.2516) * 0.01;
+                            })
+                        }
+                        if (entity.uniformName == "uLight_Pos") {
+                            entity.objectsWithUniform.forEach((object) => {
+                                object.material.uniforms[entity.uniformName].value = new Vector3((slider.attachedPointer.children[0].position.x) * 5, object.material.uniforms[entity.uniformName].value.y, object.material.uniforms[entity.uniformName].value.z);
+                            })
+                            entity.light.position.set(slider.attachedPointer.children[0].position.x * 10, entity.light.position.y, entity.light.position.z);
+
+                        }
                     }
                     break;
 

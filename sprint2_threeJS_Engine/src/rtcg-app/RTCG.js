@@ -5,7 +5,7 @@ import { createLight } from './components/lighting.js';
 import { SliderController } from './systems/SliderController.js';
 import { MorphCube, morphMesh } from './systems/MorphCube.js';
 import { createRenderer } from './systems/renderer.js';
-import { HandtrackingUtils, createDraggableObject, createSliderObject, world, createToggleStripesButton } from '../rtcg-app/systems/VRUtils/HandtrackingUtils.js'
+import { HandtrackingUtils, createDraggableObject, createSliderObject, world, createToggleStripesButton, createInvertButton, createColorButton } from '../rtcg-app/systems/VRUtils/HandtrackingUtils.js'
 import * as THREE from '../../js/three.module.js';
 import { Animator } from './systems/Animator.js';
 
@@ -24,6 +24,9 @@ let light;
 let sphereRedSlider;
 let sphereGreenSlider;
 let sphereBlueSlider;
+let sphereAlphalider;
+let sphereStripesFrequenzySlider;
+let sphereLightPosSlider;
 let sceneObjects = new Array();
 
 let cube;
@@ -48,6 +51,9 @@ class RTCG {
         scene.add(sphereRedSlider);
         scene.add(sphereGreenSlider);
         scene.add(sphereBlueSlider);
+        scene.add(sphereAlphalider);
+        scene.add(sphereStripesFrequenzySlider);
+        scene.add(sphereLightPosSlider);
         /*animator = new Animator(render);
         animator.add(morph);
         animator.add(torusKnot);
@@ -59,7 +65,7 @@ class RTCG {
         animator.start();*/
 
         //new SliderController(cube, torusKnot, sphereRedSlider);
-        new MorphCube(cube);
+        //new MorphCube(cube);
 
         window.addEventListener('resize', onWindowResize);
         animate();
@@ -69,9 +75,9 @@ class RTCG {
     createSceneContent() {
 
         light = createLight();
-        light.position.set(0, 15, 0);
+        light.position.set(0, 3, -1);
 
-        helper = new THREE.PointLightHelper(light);
+        helper = new THREE.PointLightHelper(light, 0.15, new THREE.Color("rgb(255, 255, 0)"));
 
         cube = createCube(light, camera);
         createDraggableObject(cube);
@@ -89,22 +95,36 @@ class RTCG {
         cone.castShadow = true;
         plane.receiveShadow = true;
 
-        sphereRedSlider = createSphere("rgb(255, 0, 0)");
-        sphereGreenSlider = createSphere("rgb(0, 255, 0)");
-        sphereBlueSlider = createSphere("rgb(0, 0, 255)");
+        sphereRedSlider = createSphere("rgb(0, 0, 0)");
+        sphereGreenSlider = createSphere("rgb(0, 0, 0)");
+        sphereBlueSlider = createSphere("rgb(0, 0, 0)");
+        sphereAlphalider = createSphere("rgb(0, 0, 0)");
 
-        createSliderObject(sphereRedSlider, sceneObjects, "uSlider_Red");
-        createSliderObject(sphereGreenSlider, sceneObjects, "uSlider_Green");
-        createSliderObject(sphereBlueSlider, sceneObjects, "uSlider_Blue");
+
+        sphereStripesFrequenzySlider = createSphere("rgb(255, 255, 255)");
+        sphereLightPosSlider = createSphere("rgb(255, 255, 0)");
+
+        createSliderObject(sphereRedSlider, sceneObjects, "uSlider_Red", light);
+        createSliderObject(sphereGreenSlider, sceneObjects, "uSlider_Green", light);
+        createSliderObject(sphereBlueSlider, sceneObjects, "uSlider_Blue", light);
+        createSliderObject(sphereAlphalider, sceneObjects, "uSlider_Alpha", light);
+        createSliderObject(sphereStripesFrequenzySlider, sceneObjects, "uSlider_Stripe_Frequency", light);
+        createSliderObject(sphereLightPosSlider, sceneObjects, "uLight_Pos", light);
+
+        createColorButton(sceneObjects);
         createToggleStripesButton(sceneObjects);
+        createInvertButton(sceneObjects);
 
         this.moveObject(torusKnot, -1, 0, -2);
         this.moveObject(cube, 0, 0, -2);
         this.moveObject(cone, 1, 0, -2);
 
-        sphereRedSlider.position.set(-0.25, 1, -0.1);
-        sphereGreenSlider.position.set(-0.25, 0.9, -0.1);
-        sphereBlueSlider.position.set(-0.25, 0.8, -0.1);
+        sphereRedSlider.position.set(-0.25, 1.8, -0.1);
+        sphereGreenSlider.position.set(-0.25, 1.7, -0.1);
+        sphereBlueSlider.position.set(-0.25, 1.6, -0.1);
+        sphereAlphalider.position.set(0.25, 1.5, -0.1);
+        sphereStripesFrequenzySlider.position.set(-0.25, 1.4, -0.1);
+        sphereLightPosSlider.position.set(0, 1.3, -0.1);
 
         plane.position.set(0, -1, -2);
         plane.rotation.set(190, 0, 0);

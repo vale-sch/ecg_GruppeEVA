@@ -19,7 +19,11 @@ function createCube(light, camera) {
             uSlider_Blue: new Uniform(0),
             uSlider_Alpha: new Uniform(1.0),
 
-            uToggle_Stripes: new Uniform(false)
+            uSlider_Stripe_Frequency: new Uniform(0.0016),
+            uToggle_Invert: new Uniform(false),
+            uToggle_Stripes: new Uniform(false),
+            uToggle_Color: new Uniform(false)
+
         },
 
         vertexShader: `
@@ -78,7 +82,12 @@ function createCube(light, camera) {
         uniform float uSlider_Red;
         uniform float uSlider_Green;
         uniform float uSlider_Blue;
+
         uniform bool uToggle_Stripes;
+        uniform float uSlider_Alpha;
+        uniform float uSlider_Stripe_Frequency;
+        uniform bool uToggle_Invert;
+        uniform bool uToggle_Color;
 
         float pi = 3.14159265359;
 
@@ -88,8 +97,8 @@ function createCube(light, camera) {
             gl_FragColor = vColor;
 
             if(uToggle_Stripes) {
-                float x_color = gl_FragCoord.x * 0.0016 * (2.0*pi);
-                float y_color = gl_FragCoord.y * 0.0016 * (2.0*pi);
+                float x_color = gl_FragCoord.x * uSlider_Stripe_Frequency * (2.0*pi);
+                float y_color = gl_FragCoord.y * uSlider_Stripe_Frequency * (2.0*pi);
 
                 float r_value = sin(x_color * y_color);
                 float g_value = cos(x_color * y_color);
@@ -98,9 +107,19 @@ function createCube(light, camera) {
                 gl_FragColor = 0.3 * vec4(r_value, g_value, b_value, 1) + 0.7 * gl_FragColor;
             }
 
+            if(uToggle_Color) {
                 gl_FragColor.r = gl_FragColor.r * uSlider_Red;
                 gl_FragColor.g = gl_FragColor.g * uSlider_Green;
                 gl_FragColor.b = gl_FragColor.b * uSlider_Blue;
+                gl_FragColor.a = gl_FragColor.a * uSlider_Alpha;
+            }
+
+            if(uToggle_Invert) {
+                gl_FragColor.r = 1.0 - gl_FragColor.r;
+                gl_FragColor.g = 1.0 - gl_FragColor.g;
+                gl_FragColor.b = 1.0 - gl_FragColor.b;
+            }
+           
         }
             `  });
 
@@ -127,7 +146,11 @@ function createCone(light, camera) {
             uSlider_Blue: new Uniform(0),
             uSlider_Alpha: new Uniform(1.0),
 
-            uToggle_Stripes: new Uniform(false)
+            uSlider_Stripe_Frequency: new Uniform(0.0016),
+            uToggle_Invert: new Uniform(false),
+            uToggle_Stripes: new Uniform(false),
+            uToggle_Color: new Uniform(false)
+
         },
 
         vertexShader: `
@@ -186,7 +209,12 @@ function createCone(light, camera) {
         uniform float uSlider_Red;
         uniform float uSlider_Green;
         uniform float uSlider_Blue;
+
         uniform bool uToggle_Stripes;
+        uniform float uSlider_Alpha;
+        uniform float uSlider_Stripe_Frequency;
+        uniform bool uToggle_Invert;
+        uniform bool uToggle_Color;
 
         float pi = 3.14159265359;
 
@@ -196,8 +224,8 @@ function createCone(light, camera) {
             gl_FragColor = vColor;
 
             if(uToggle_Stripes) {
-                float x_color = gl_FragCoord.x * 0.0016 * (2.0*pi);
-                float y_color = gl_FragCoord.y * 0.0016 * (2.0*pi);
+                float x_color = gl_FragCoord.x * uSlider_Stripe_Frequency * (2.0*pi);
+                float y_color = gl_FragCoord.y * uSlider_Stripe_Frequency * (2.0*pi);
 
                 float r_value = sin(x_color * y_color);
                 float g_value = cos(x_color * y_color);
@@ -206,9 +234,19 @@ function createCone(light, camera) {
                 gl_FragColor = 0.3 * vec4(r_value, g_value, b_value, 1) + 0.7 * gl_FragColor;
             }
 
+            if(uToggle_Color) {
                 gl_FragColor.r = gl_FragColor.r * uSlider_Red;
                 gl_FragColor.g = gl_FragColor.g * uSlider_Green;
                 gl_FragColor.b = gl_FragColor.b * uSlider_Blue;
+                gl_FragColor.a = gl_FragColor.a * uSlider_Alpha;
+            }
+
+            if(uToggle_Invert) {
+                gl_FragColor.r = 1.0 - gl_FragColor.r;
+                gl_FragColor.g = 1.0 - gl_FragColor.g;
+                gl_FragColor.b = 1.0 - gl_FragColor.b;
+            }
+           
         }
             `  });
 
@@ -237,7 +275,11 @@ function createTorusKnot(light, camera) {
             uSlider_Blue: new Uniform(0),
             uSlider_Alpha: new Uniform(1.0),
 
-            uToggle_Stripes: new Uniform(false)
+            uSlider_Stripe_Frequency: new Uniform(0.0016),
+            uToggle_Invert: new Uniform(false),
+            uToggle_Stripes: new Uniform(false),
+            uToggle_Color: new Uniform(false)
+
         },
 
         vertexShader: `
@@ -296,7 +338,12 @@ function createTorusKnot(light, camera) {
         uniform float uSlider_Red;
         uniform float uSlider_Green;
         uniform float uSlider_Blue;
+
         uniform bool uToggle_Stripes;
+        uniform float uSlider_Alpha;
+        uniform float uSlider_Stripe_Frequency;
+        uniform bool uToggle_Invert;
+        uniform bool uToggle_Color;
 
         float pi = 3.14159265359;
 
@@ -306,8 +353,8 @@ function createTorusKnot(light, camera) {
             gl_FragColor = vColor;
 
             if(uToggle_Stripes) {
-                float x_color = gl_FragCoord.x * 0.0016 * (2.0*pi);
-                float y_color = gl_FragCoord.y * 0.0016 * (2.0*pi);
+                float x_color = gl_FragCoord.x * uSlider_Stripe_Frequency * (2.0*pi);
+                float y_color = gl_FragCoord.y * uSlider_Stripe_Frequency * (2.0*pi);
 
                 float r_value = sin(x_color * y_color);
                 float g_value = cos(x_color * y_color);
@@ -316,9 +363,19 @@ function createTorusKnot(light, camera) {
                 gl_FragColor = 0.3 * vec4(r_value, g_value, b_value, 1) + 0.7 * gl_FragColor;
             }
 
+            if(uToggle_Color) {
                 gl_FragColor.r = gl_FragColor.r * uSlider_Red;
                 gl_FragColor.g = gl_FragColor.g * uSlider_Green;
                 gl_FragColor.b = gl_FragColor.b * uSlider_Blue;
+                gl_FragColor.a = gl_FragColor.a * uSlider_Alpha;
+            }
+
+            if(uToggle_Invert) {
+                gl_FragColor.r = 1.0 - gl_FragColor.r;
+                gl_FragColor.g = 1.0 - gl_FragColor.g;
+                gl_FragColor.b = 1.0 - gl_FragColor.b;
+            }
+           
         }
             `  });
 
@@ -340,7 +397,7 @@ function createSphere(color) {
     const geometry = new SphereGeometry(0.05, 128, 128);
 
     //ERstellungdesStandardBasismaterials
-    const material = new MeshPhongMaterial();
+    const material = new MeshPhongMaterial({ transparent: true });
     material.color = new Color(color);
 
     //ErzeugungeinesMeshesmdassGeometrieundMaterialbeinhaltet

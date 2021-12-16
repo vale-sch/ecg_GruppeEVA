@@ -77,21 +77,33 @@ class HandtrackingUtils {
 
 
         const exitText = createText('Exiting session...', 0.04);
-        exitText.position.set(0, 1.5, - 0.6);
+        exitText.position.set(0, 2.5, - 0.6);
         exitText.visible = false;
         scene.add(exitText);
 
         const redSliderText = createText('RED', 0.04);
-        redSliderText.position.set(-0.4, 1, -0.1);
+        redSliderText.position.set(-0.4, 1.8, -0.1);
         scene.add(redSliderText);
 
         const greenSliderText = createText('GREEN', 0.04);
-        greenSliderText.position.set(-0.4, 0.9, -0.1);
+        greenSliderText.position.set(-0.4, 1.7, -0.1);
         scene.add(greenSliderText);
 
         const blueSliderText = createText('BLUE', 0.04);
-        blueSliderText.position.set(-0.4, 0.8, -0.1);
+        blueSliderText.position.set(-0.4, 1.6, -0.1);
         scene.add(blueSliderText);
+
+        const alphaSliderText = createText('ALPHA', 0.04);
+        alphaSliderText.position.set(-0.4, 1.5, -0.1);
+        scene.add(alphaSliderText);
+
+        const stripesFrequencyText = createText('STRIPES', 0.04);
+        stripesFrequencyText.position.set(-0.4, 1.4, -0.1);
+        scene.add(stripesFrequencyText);
+
+        const lightPosXText = createText('lightPosX', 0.04);
+        lightPosXText.position.set(-0.4, 1.3, -0.1);
+        scene.add(lightPosXText);
 
 
         world
@@ -155,7 +167,7 @@ function createToggleStripesButton(objectsWithUniform) {
     const stripesButtonText = createText('toggle stripes', 0.03);
     stripesButton.add(stripesButtonText);
     stripesButtonText.position.set(0, 0, 0.0051);
-    stripesButton.position.set(0.5, - 0.3, 0.25);
+    stripesButton.position.set(0.5, - 0.425, 0.25);
     stripesButton.rotation.set(0, -45, 0);
     menuMesh.add(stripesButton);
 
@@ -176,17 +188,72 @@ function createToggleStripesButton(objectsWithUniform) {
 
     tSEntity.addComponent(Button, { action: tSAction });
 }
+function createInvertButton(objectsWithUniform) {
 
-function createSliderObject(object, objectsWithUniform, uniformName) {
+    const invertButton = makeButtonMesh(0.2, 0.1, 0.01, 0x000000);
+    const invertButtonText = createText('toggle invert', 0.03);
+    invertButton.add(invertButtonText);
+    invertButtonText.position.set(0, 0, 0.0051);
+    invertButton.position.set(0.5, - 0.55, 0.25);
+    invertButton.rotation.set(0, -45, 0);
+    menuMesh.add(invertButton);
+
+    const tIEntity = world.createEntity();
+    tIEntity.addComponent(Intersectable);
+    tIEntity.addComponent(Object3D, { object: invertButton });
+    tIEntity.objectsWithUniform = objectsWithUniform;
+    const tSAction = function () {
+
+        tIEntity.objectsWithUniform.forEach(object => {
+            if (object.material.uniforms.uToggle_Invert.value == true)
+                object.material.uniforms.uToggle_Invert.value = false;
+            else
+                object.material.uniforms.uToggle_Invert.value = true;
+        });
+
+    };
+
+    tIEntity.addComponent(Button, { action: tSAction });
+}
+function createColorButton(objectsWithUniform) {
+
+    const invertButton = makeButtonMesh(0.2, 0.1, 0.01, 0x000000);
+    const invertButtonText = createText('toggle color', 0.03);
+    invertButton.add(invertButtonText);
+    invertButtonText.position.set(0, 0, 0.0051);
+    invertButton.position.set(0.5, - 0.3, 0.25);
+    invertButton.rotation.set(0, -45, 0);
+    menuMesh.add(invertButton);
+
+    const tIEntity = world.createEntity();
+    tIEntity.addComponent(Intersectable);
+    tIEntity.addComponent(Object3D, { object: invertButton });
+    tIEntity.objectsWithUniform = objectsWithUniform;
+    const tSAction = function () {
+
+        tIEntity.objectsWithUniform.forEach(object => {
+            if (object.material.uniforms.uToggle_Color.value == true)
+                object.material.uniforms.uToggle_Color.value = false;
+            else
+                object.material.uniforms.uToggle_Color.value = true;
+        });
+
+    };
+
+    tIEntity.addComponent(Button, { action: tSAction });
+}
+
+function createSliderObject(object, objectsWithUniform, uniformName, light) {
     const entity = world.createEntity();
     entity.addComponent(Intersectable);
     entity.addComponent(Object3D, { object: object });
     entity.addComponent(Slider);
     entity.objectsWithUniform = objectsWithUniform;
     entity.uniformName = uniformName;
+    entity.light = light;
 }
 
-export { HandtrackingUtils, createDraggableObject, createSliderObject, createToggleStripesButton, world }
+export { HandtrackingUtils, createDraggableObject, createSliderObject, createToggleStripesButton, createInvertButton, createColorButton, world }
 
 function makeButtonMesh(x, y, z, color) {
 
