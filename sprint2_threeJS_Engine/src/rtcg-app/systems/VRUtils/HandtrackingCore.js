@@ -134,36 +134,37 @@ class SliderSystem extends System {
                 case "attached":
                     object.scale.set(1.1, 1.1, 1.1);
 
-                    if (slider.attachedPointer.children[0].position.x > -0.25 && slider.attachedPointer.children[0].position.x < 0.25) {
-                        object.position.x = slider.attachedPointer.children[0].position.x;
+                    if (slider.attachedPointer.children[0].position.z <= 0.5 && slider.attachedPointer.children[0].position.z >= -0.5) {
+
+                        object.position.z = slider.attachedPointer.pointerObject.position.z;
                         if (entity.uniformName == "uSlider_Red" || entity.uniformName == "uSlider_Green" || entity.uniformName == "uSlider_Blue" || entity.uniformName == "uSlider_Alpha") {
                             if (entity.uniformName == "uSlider_Red") {
-                                object.material.color.r = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                                object.material.color.r = -(slider.attachedPointer.children[0].position.z - 0.5);
                             }
                             if (entity.uniformName == "uSlider_Green") {
-                                object.material.color.g = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                                object.material.color.g = -(slider.attachedPointer.children[0].position.z - 0.5);
                             }
                             if (entity.uniformName == "uSlider_Blue") {
-                                object.material.color.b = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                                object.material.color.b = -(slider.attachedPointer.children[0].position.z - 0.5);
                             }
                             if (entity.uniformName == "uSlider_Alpha") {
-                                object.material.opacity = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                                object.material.opacity = -(slider.attachedPointer.children[0].position.z - 0.5);
                             }
                             entity.objectsWithUniform.forEach((object) => {
-                                object.material.uniforms[entity.uniformName].value = (slider.attachedPointer.children[0].position.x + 0.25) * 2;
+                                object.material.uniforms[entity.uniformName].value = -(slider.attachedPointer.children[0].position.z - 0.5);
                             })
 
                         }
                         if (entity.uniformName == "uSlider_Stripe_Frequency") {
                             entity.objectsWithUniform.forEach((object) => {
-                                object.material.uniforms[entity.uniformName].value = (slider.attachedPointer.children[0].position.x + 0.2516) * 0.01;
+                                object.material.uniforms[entity.uniformName].value = (slider.attachedPointer.children[0].position.z + 0.2516) * 0.01;
                             })
                         }
                         if (entity.uniformName == "uLight_Pos") {
                             entity.objectsWithUniform.forEach((object) => {
-                                object.material.uniforms[entity.uniformName].value = new Vector3((slider.attachedPointer.children[0].position.x) * 5, object.material.uniforms[entity.uniformName].value.y, object.material.uniforms[entity.uniformName].value.z);
+                                object.material.uniforms[entity.uniformName].value = new Vector3((slider.attachedPointer.children[0].position.z) * 5, object.material.uniforms[entity.uniformName].value.y, object.material.uniforms[entity.uniformName].value.z);
                             })
-                            entity.light.position.set(slider.attachedPointer.children[0].position.x * 10, entity.light.position.y, entity.light.position.z);
+                            entity.light.position.set(slider.attachedPointer.children[0].position.z * 10, entity.light.position.y, entity.light.position.z);
 
                         }
                     }
@@ -190,6 +191,8 @@ SliderSystem.queries = {
 
 class Intersectable extends TagComponent { }
 export { Intersectable };
+let distance;
+let intersectingEntity;
 class HandRaySystem extends System {
 
     init(attributes) {
@@ -201,9 +204,31 @@ class HandRaySystem extends System {
     execute( /*delta, time*/) {
 
         this.handPointers.forEach(hp => {
-
-            let distance = null;
-            let intersectingEntity = null;
+            if (intersectingEntity != null && intersectingEntity.hasComponent(Slider)) {
+                const slider = intersectingEntity.getMutableComponent(Slider);
+                const object = intersectingEntity.getComponent(Object3D).object;
+                object.scale.set(1.1, 1.1, 1.1);
+                if (hp.isPinched()) {
+                    if (!hp.isAttached() && slider.state != 'attached') {
+                        slider.state = 'to-be-attached';
+                        slider.attachedPointer = hp;
+                        hp.setAttached(true);
+                    }
+                }
+                else {
+                    if (hp.isAttached() && slider.state == 'attached') {
+                        slider.state = 'to-be-detached';
+                        slider.attachedPointer = null;
+                        hp.setAttached(false);
+                        hp.pinched = false;
+                        intersectingEntity = null;
+                        distance = null;
+                    }
+                }
+                return;
+            }
+            intersectingEntity = null;
+            distance = null;
             this.queries.intersectable.results.forEach(entity => {
 
                 const object = entity.getComponent(Object3D).object;

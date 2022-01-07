@@ -68,7 +68,7 @@ class HandtrackingUtils {
         const exitButtonText = createText('exit', 0.06);
         exitButton.add(exitButtonText);
         exitButtonText.position.set(0, 0, 0.0051);
-        exitButton.position.set(0.5, - 0.18, 0.25);
+        exitButton.position.set(0.5, 0.75, -0.25);
         exitButton.rotation.set(0, -45, 0);
         menuMesh.add(exitButton);
 
@@ -77,32 +77,38 @@ class HandtrackingUtils {
 
 
         const exitText = createText('Exiting session...', 0.04);
-        exitText.position.set(0, 2.5, - 0.6);
+        exitText.position.set(0, 1, - 0.3);
         exitText.visible = false;
         scene.add(exitText);
 
         const redSliderText = createText('RED', 0.04);
-        redSliderText.position.set(-0.4, 1.8, -0.1);
+        redSliderText.position.set(1, 1.8, -0.65);
+        redSliderText.rotation.set(0, 4.5, 0);
         scene.add(redSliderText);
 
         const greenSliderText = createText('GREEN', 0.04);
-        greenSliderText.position.set(-0.4, 1.7, -0.1);
+        greenSliderText.position.set(1, 1.7, -0.65);
+        greenSliderText.rotation.set(0, 4.5, 0);
         scene.add(greenSliderText);
 
         const blueSliderText = createText('BLUE', 0.04);
-        blueSliderText.position.set(-0.4, 1.6, -0.1);
+        blueSliderText.position.set(1, 1.6, -0.65);
+        blueSliderText.rotation.set(0, 4.5, 0);
         scene.add(blueSliderText);
 
         const alphaSliderText = createText('ALPHA', 0.04);
-        alphaSliderText.position.set(-0.4, 1.5, -0.1);
+        alphaSliderText.position.set(1, 1.5, -0.65);
+        alphaSliderText.rotation.set(0, 4.5, 0);
         scene.add(alphaSliderText);
 
         const stripesFrequencyText = createText('STRIPES', 0.04);
-        stripesFrequencyText.position.set(-0.4, 1.4, -0.1);
+        stripesFrequencyText.position.set(1, 1.4, -0.65);
+        stripesFrequencyText.rotation.set(0, 4.5, 0);
         scene.add(stripesFrequencyText);
 
         const lightPosXText = createText('lightPosX', 0.04);
-        lightPosXText.position.set(-0.4, 1.3, -0.1);
+        lightPosXText.position.set(1, 1.3, -0.65);
+        lightPosXText.rotation.set(0, 4.5, 0);
         scene.add(lightPosXText);
 
 
@@ -167,7 +173,7 @@ function createToggleStripesButton(objectsWithUniform) {
     const stripesButtonText = createText('toggle stripes', 0.03);
     stripesButton.add(stripesButtonText);
     stripesButtonText.position.set(0, 0, 0.0051);
-    stripesButton.position.set(0.5, - 0.425, 0.25);
+    stripesButton.position.set(0.5, 0.565, -0.25);
     stripesButton.rotation.set(0, -45, 0);
     menuMesh.add(stripesButton);
 
@@ -194,7 +200,7 @@ function createInvertButton(objectsWithUniform) {
     const invertButtonText = createText('toggle invert', 0.03);
     invertButton.add(invertButtonText);
     invertButtonText.position.set(0, 0, 0.0051);
-    invertButton.position.set(0.5, - 0.55, 0.25);
+    invertButton.position.set(0.5, 0.445, -0.25);
     invertButton.rotation.set(0, -45, 0);
     menuMesh.add(invertButton);
 
@@ -221,7 +227,7 @@ function createColorButton(objectsWithUniform) {
     const invertButtonText = createText('toggle color', 0.03);
     invertButton.add(invertButtonText);
     invertButtonText.position.set(0, 0, 0.0051);
-    invertButton.position.set(0.5, - 0.3, 0.25);
+    invertButton.position.set(0.5, 0.325, -0.25);
     invertButton.rotation.set(0, -45, 0);
     menuMesh.add(invertButton);
 

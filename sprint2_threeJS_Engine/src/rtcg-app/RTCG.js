@@ -119,12 +119,12 @@ class RTCG {
         this.moveObject(cube, 0, 0, -2);
         this.moveObject(cone, 1, 0, -2);
 
-        sphereRedSlider.position.set(-0.25, 1.8, -0.1);
-        sphereGreenSlider.position.set(-0.25, 1.7, -0.1);
-        sphereBlueSlider.position.set(-0.25, 1.6, -0.1);
-        sphereAlphalider.position.set(0.25, 1.5, -0.1);
-        sphereStripesFrequenzySlider.position.set(-0.25, 1.4, -0.1);
-        sphereLightPosSlider.position.set(0, 1.3, -0.1);
+        sphereRedSlider.position.set(1, 1.8, 0.5);
+        sphereGreenSlider.position.set(1, 1.7, 0.5);
+        sphereBlueSlider.position.set(1, 1.6, 0.5);
+        sphereAlphalider.position.set(1, 1.5, -0.5);
+        sphereStripesFrequenzySlider.position.set(1, 1.4, 0.5);
+        sphereLightPosSlider.position.set(1, 1.3, 0);
 
         plane.position.set(0, -1, -2);
         plane.rotation.set(190, 0, 0);
