@@ -135,8 +135,9 @@ class SliderSystem extends System {
                     object.scale.set(1.1, 1.1, 1.1);
 
                     if (slider.attachedPointer.children[0].position.z <= 0.5 && slider.attachedPointer.children[0].position.z >= -0.5) {
-
-                        object.position.z = slider.attachedPointer.pointerObject.position.z;
+                        let dir = new Vector3();
+                        dir.subVectors(object.position, slider.attachedPointer.children[0].position).normalize();
+                        object.position.set(object.position.x, object.position.y, slider.attachedPointer.children[0].position.z + dir.z);
                         if (entity.uniformName == "uSlider_Red" || entity.uniformName == "uSlider_Green" || entity.uniformName == "uSlider_Blue" || entity.uniformName == "uSlider_Alpha") {
                             if (entity.uniformName == "uSlider_Red") {
                                 object.material.color.r = -(slider.attachedPointer.children[0].position.z - 0.5);
@@ -193,6 +194,7 @@ class Intersectable extends TagComponent { }
 export { Intersectable };
 let distance;
 let intersectingEntity;
+let isObjectAttached;
 class HandRaySystem extends System {
 
     init(attributes) {
@@ -204,29 +206,38 @@ class HandRaySystem extends System {
     execute( /*delta, time*/) {
 
         this.handPointers.forEach(hp => {
-            if (intersectingEntity != null && intersectingEntity.hasComponent(Slider)) {
-                const slider = intersectingEntity.getMutableComponent(Slider);
-                const object = intersectingEntity.getComponent(Object3D).object;
-                object.scale.set(1.1, 1.1, 1.1);
-                if (hp.isPinched()) {
-                    if (!hp.isAttached() && slider.state != 'attached') {
-                        slider.state = 'to-be-attached';
-                        slider.attachedPointer = hp;
-                        hp.setAttached(true);
-                    }
-                }
-                else {
-                    if (hp.isAttached() && slider.state == 'attached') {
+            if (intersectingEntity != null && isObjectAttached) {
+                if (intersectingEntity.hasComponent(Slider)) {
+                    const slider = intersectingEntity.getMutableComponent(Slider);
+                    if (!hp.isPinched() && hp.isAttached() && slider.state == 'attached') {
                         slider.state = 'to-be-detached';
                         slider.attachedPointer = null;
                         hp.setAttached(false);
+                        isObjectAttached = false;
                         hp.pinched = false;
                         intersectingEntity = null;
                         distance = null;
+
                     }
+                    return;
                 }
-                return;
+
+                if (intersectingEntity.hasComponent(Draggable)) {
+                    const draggable = intersectingEntity.getMutableComponent(Draggable);
+                    if (!hp.isPinched() && hp.isAttached() && draggable.state == 'attached') {
+                        draggable.state = 'to-be-detached';
+                        draggable.attachedPointer = null;
+                        hp.setAttached(false);
+                        isObjectAttached = false;
+                        hp.pinched = false;
+                        intersectingEntity = null;
+                        distance = null;
+
+                    }
+                    return;
+                }
             }
+
             intersectingEntity = null;
             distance = null;
             this.queries.intersectable.results.forEach(entity => {
@@ -247,18 +258,11 @@ class HandRaySystem extends System {
             if (distance) {
                 hp.setCursor(distance);
                 if (intersectingEntity.hasComponent(Button)) {
-
                     const button = intersectingEntity.getMutableComponent(Button);
-                    if (hp.isPinched()) {
-
+                    if (hp.isPinched())
                         button.currState = 'pressed';
-
-                    } else if (button.currState != 'pressed') {
-
+                    else if (button.currState != 'pressed')
                         button.currState = 'hovered';
-
-                    }
-
                 }
 
                 if (intersectingEntity.hasComponent(Slider)) {
@@ -267,17 +271,10 @@ class HandRaySystem extends System {
                     object.scale.set(1.1, 1.1, 1.1);
                     if (hp.isPinched()) {
                         if (!hp.isAttached() && slider.state != 'attached') {
+                            isObjectAttached = true;
                             slider.state = 'to-be-attached';
                             slider.attachedPointer = hp;
                             hp.setAttached(true);
-                        }
-                    }
-                    else {
-                        if (hp.isAttached() && slider.state == 'attached') {
-                            slider.state = 'to-be-detached';
-                            slider.attachedPointer = null;
-                            hp.setAttached(false);
-                            hp.pinched = false;
                         }
                     }
                 }
@@ -288,28 +285,14 @@ class HandRaySystem extends System {
                     const object = intersectingEntity.getComponent(Object3D).object;
                     object.scale.set(1.1, 1.1, 1.1);
                     if (hp.isPinched()) {
-
                         if (!hp.isAttached() && draggable.state != 'attached') {
-
+                            isObjectAttached = true;
                             draggable.state = 'to-be-attached';
                             draggable.attachedPointer = hp;
                             hp.setAttached(true);
 
                         }
-
-                    } else {
-
-                        if (hp.isAttached() && draggable.state == 'attached') {
-
-                            console.log('hello');
-                            draggable.state = 'to-be-detached';
-                            draggable.attachedPointer = null;
-                            hp.setAttached(false);
-
-                        }
-
                     }
-
                 }
             } else {
                 hp.setCursor(1.5);

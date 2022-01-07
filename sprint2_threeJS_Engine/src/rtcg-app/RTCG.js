@@ -75,7 +75,7 @@ class RTCG {
     createSceneContent() {
 
         light = createLight();
-        light.position.set(0, 3, -1);
+        light.position.set(0, 2, -1);
 
         helper = new THREE.PointLightHelper(light, 0.15, new THREE.Color("rgb(255, 255, 0)"));
 
