@@ -135,9 +135,7 @@ class SliderSystem extends System {
                     object.scale.set(1.1, 1.1, 1.1);
 
                     if (slider.attachedPointer.children[0].position.z <= 0.5 && slider.attachedPointer.children[0].position.z >= -0.5) {
-                        let dir = new Vector3();
-                        dir.subVectors(object.position, slider.attachedPointer.children[0].position).normalize();
-                        object.position.set(object.position.x, object.position.y, slider.attachedPointer.children[0].position.z + dir.z);
+                        object.position.z = slider.attachedPointer.children[0].position.z;
                         if (entity.uniformName == "uSlider_Red" || entity.uniformName == "uSlider_Green" || entity.uniformName == "uSlider_Blue" || entity.uniformName == "uSlider_Alpha") {
                             if (entity.uniformName == "uSlider_Red") {
                                 object.material.color.r = -(slider.attachedPointer.children[0].position.z - 0.5);
