@@ -4,5 +4,6 @@
     "cert": "C:\\Users\\valiv\\server\\server.crt", //full path of the certificate
     "key": "C:\\Users\\valiv\\server\\server.key", //full path of the private key
     "passphrase": "12345"
-    }
+    },
+    "liveServer.settings.CustomBrowser": "chrome"
     }

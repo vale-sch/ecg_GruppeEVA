@@ -128,12 +128,12 @@ class RTCG {
 
 
         //Audio Test
-        listener = new THREE.AudioListener();
+        let listener = new THREE.AudioListener();
         camera.add(listener);
 
-        sound = new THREE.PositionalAudio(listener);
+        let sound = new THREE.PositionalAudio(listener);
 
-        audioLoader = new THREE.AudioLoader();
+        let audioLoader = new THREE.AudioLoader();
         audioLoader.load('sounds/test.ogg', function (buffer) {
             sound.setBuffer(buffer);
             sound.setRefDistance(20);
