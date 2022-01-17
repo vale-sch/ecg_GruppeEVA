@@ -126,6 +126,22 @@ class RTCG {
         sphereStripesFrequenzySlider.position.set(1, 1.4, 0.5);
         sphereLightPosSlider.position.set(1, 1.3, 0);
 
+
+        //Audio Test
+        listener = new THREE.AudioListener();
+        camera.add(listener);
+
+        sound = new THREE.PositionalAudio(listener);
+
+        audioLoader = new THREE.AudioLoader();
+        audioLoader.load('sounds/test.ogg', function (buffer) {
+            sound.setBuffer(buffer);
+            sound.setRefDistance(20);
+            sound.play();
+        });
+
+        torusKnot.add(sound);
+
         plane.position.set(0, -1, -2);
         plane.rotation.set(190, 0, 0);
     }
