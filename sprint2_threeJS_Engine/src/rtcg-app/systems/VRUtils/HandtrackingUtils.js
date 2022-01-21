@@ -194,6 +194,7 @@ function createToggleStripesButton(objectsWithUniform) {
 
     tSEntity.addComponent(Button, { action: tSAction });
 }
+
 function createInvertButton(objectsWithUniform) {
 
     const invertButton = makeButtonMesh(0.2, 0.1, 0.01, 0x000000);
@@ -221,6 +222,7 @@ function createInvertButton(objectsWithUniform) {
 
     tIEntity.addComponent(Button, { action: tSAction });
 }
+
 function createColorButton(objectsWithUniform) {
 
     const invertButton = makeButtonMesh(0.2, 0.1, 0.01, 0x000000);
@@ -249,6 +251,28 @@ function createColorButton(objectsWithUniform) {
     tIEntity.addComponent(Button, { action: tSAction });
 }
 
+function createToggleAudioButton(sound) {
+
+    const soundButton = makeButtonMesh(0.2, 0.1, 0.01, 0x000000);
+    const soundButtonText = createText('toggle sound', 0.03);
+    soundButton.add(soundButtonText);
+    soundButtonText.position.set(0, 0, 0.0051);
+    soundButton.position.set(0.5, 0.205, -0.25);
+    soundButton.rotation.set(0, -45, 0);
+    menuMesh.add(soundButton);
+
+    const tSEntity = world.createEntity();
+    tSEntity.addComponent(Intersectable);
+    tSEntity.addComponent(Object3D, { object: soundButton });
+    const tSAction = function () {
+
+        sound.play();
+
+    };
+
+    tSEntity.addComponent(Button, { action: tSAction });
+}
+
 function createSliderObject(object, objectsWithUniform, uniformName, light) {
     const entity = world.createEntity();
     entity.addComponent(Intersectable);
@@ -260,7 +284,7 @@ function createSliderObject(object, objectsWithUniform, uniformName, light) {
         entity.light = light;
 }
 
-export { HandtrackingUtils, createDraggableObject, createSliderObject, createToggleStripesButton, createInvertButton, createColorButton, world }
+export { HandtrackingUtils, createDraggableObject, createSliderObject, createToggleStripesButton, createInvertButton, createColorButton, createToggleAudioButton, world }
 
 function makeButtonMesh(x, y, z, color) {
 

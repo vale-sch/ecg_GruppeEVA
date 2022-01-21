@@ -1,11 +1,12 @@
 import { createCamera } from './components/camera.js';
+import { createSpeaker } from './components/speaker.js';
 import { createCube, createTorusKnot, createPlane, createSphere, createCone } from './components/primitiveObjects.js';
 import { createScene } from './components/scene.js';
 import { createLight } from './components/lighting.js';
 import { SliderController } from './systems/SliderController.js';
 import { MorphCube, morphMesh } from './systems/MorphCube.js';
 import { createRenderer } from './systems/renderer.js';
-import { HandtrackingUtils, createDraggableObject, createSliderObject, world, createToggleStripesButton, createInvertButton, createColorButton } from '../rtcg-app/systems/VRUtils/HandtrackingUtils.js'
+import { HandtrackingUtils, createDraggableObject, createSliderObject, world, createToggleStripesButton, createInvertButton, createColorButton, createToggleAudioButton } from '../rtcg-app/systems/VRUtils/HandtrackingUtils.js'
 import * as THREE from '../../js/three.module.js';
 import { Animator } from './systems/Animator.js';
 
@@ -18,6 +19,12 @@ let resizer;
 let animator;
 
 let torusKnot;
+let cube;
+let cone;
+
+let speaker1;
+let speaker2;
+
 let plane;
 let helper;
 let light;
@@ -29,8 +36,6 @@ let sphereStripesFrequenzySlider;
 let sphereLightPosSlider;
 let sceneObjects = new Array();
 
-let cube;
-let cone;
 
 
 class RTCG {
@@ -47,7 +52,9 @@ class RTCG {
         scene.add(torusKnot);
         scene.add(plane);
         scene.add(cube);
-        scene.add(cone)
+        scene.add(cone);
+        scene.add(speaker1);
+        scene.add(speaker2);
         scene.add(sphereRedSlider);
         scene.add(sphereGreenSlider);
         scene.add(sphereBlueSlider);
@@ -88,6 +95,11 @@ class RTCG {
         torusKnot = createTorusKnot(light, camera);
         createDraggableObject(torusKnot);
 
+        speaker1 = createSpeaker(light, camera);
+        speaker1.castShadow = true;
+        speaker2 = createSpeaker(light, camera);
+        speaker2.castShadow = true;
+
         sceneObjects.push(cube, cone, torusKnot);
         plane = createPlane();
         cube.castShadow = true;
@@ -118,6 +130,8 @@ class RTCG {
         this.moveObject(torusKnot, -1, 0, -2);
         this.moveObject(cube, 0, 0, -2);
         this.moveObject(cone, 1, 0, -2);
+        this.moveObject(speaker1, -2, 0, -3);
+        this.moveObject(speaker2, 2, 0, -3);
 
         sphereRedSlider.position.set(1, 1.8, 0.5);
         sphereGreenSlider.position.set(1, 1.7, 0.5);
@@ -131,17 +145,23 @@ class RTCG {
         let listener = new THREE.AudioListener();
         camera.add(listener);
 
-        let sound = new THREE.PositionalAudio(listener);
+        let sound1 = new THREE.PositionalAudio(listener);
+        let sound2 = new THREE.PositionalAudio(listener);
 
         let audioLoader = new THREE.AudioLoader();
-        audioLoader.load('sounds/test.ogg', function (buffer) {
-            sound.setBuffer(buffer);
-            sound.setRefDistance(20);
-            sound.play();
+        audioLoader.load('./src/rtcg-app/sounds/test.ogg', function (buffer) {
+            sound1.setBuffer(buffer);
+            sound1.setRefDistance(0.5);
+            sound1.play();
+            /* sound2.setBuffer(buffer);
+            sound2.setRefDistance(0.5);
+            sound2.play(); */
         });
 
-        torusKnot.add(sound);
+        createToggleAudioButton(sound1);
 
+        speaker1.add(sound1);
+        //speaker2.add(sound2);
         plane.position.set(0, -1, -2);
         plane.rotation.set(190, 0, 0);
     }
@@ -159,6 +179,7 @@ class RTCG {
 
 
 }
+
 function animate() {
     renderer.setAnimationLoop(render);
 }
