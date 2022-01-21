@@ -2,12 +2,9 @@ import { createCamera } from './components/camera.js';
 import { createCube, createTorusKnot, createPlane, createSphere, createCone } from './components/primitiveObjects.js';
 import { createScene } from './components/scene.js';
 import { createLight } from './components/lighting.js';
-import { SliderController } from './systems/SliderController.js';
-import { MorphCube, morphMesh } from './systems/MorphCube.js';
 import { createRenderer } from './systems/renderer.js';
-import { HandtrackingUtils, createDraggableObject, createSliderObject, world, createToggleStripesButton, createInvertButton, createColorButton } from '../rtcg-app/systems/VRUtils/HandtrackingUtils.js'
+import { HandtrackingUtils, createDraggableObject, createSliderObject, world, createToggleStripesButton, createInvertButton, createColorButton, createBrightnessButton } from '../rtcg-app/systems/VRUtils/HandtrackingUtils.js'
 import * as THREE from '../../js/three.module.js';
-import { Animator } from './systems/Animator.js';
 
 const clock = new THREE.Clock();
 
@@ -24,9 +21,12 @@ let light;
 let sphereRedSlider;
 let sphereGreenSlider;
 let sphereBlueSlider;
-let sphereAlphalider;
+let sphereAlphaSlider;
+let sphereBrightnessSlider;
 let sphereStripesFrequenzySlider;
-let sphereLightPosSlider;
+let sphereLightXPosSlider;
+let sphereLightYPosSlider;
+let sphereLightZPosSlider;
 let sceneObjects = new Array();
 
 let cube;
@@ -39,37 +39,13 @@ class RTCG {
         renderer = createRenderer();
         camera = createCamera();
         scene = createScene();
+
         new HandtrackingUtils(scene, renderer, camera);
         this.createSceneContent();
-        scene.add(light);
-        scene.add(helper);
-
-        scene.add(torusKnot);
-        scene.add(plane);
-        scene.add(cube);
-        scene.add(cone)
-        scene.add(sphereRedSlider);
-        scene.add(sphereGreenSlider);
-        scene.add(sphereBlueSlider);
-        scene.add(sphereAlphalider);
-        scene.add(sphereStripesFrequenzySlider);
-        scene.add(sphereLightPosSlider);
-        /*animator = new Animator(render);
-        animator.add(morph);
-        animator.add(torusKnot);
-        animator.add(sphere);
-
-        animator.addContinuousAnimation(torusKnot, "rotate", { x: 1, y: 1 });
-        animator.addContinuousAnimation(morph, "rotate", { x: 1, y: 1 });
-        animator.addContinuousAnimation(sphere, "rotate", { x: 1, y: 1 });
-        animator.start();*/
-
-        //new SliderController(cube, torusKnot, sphereRedSlider);
-        //new MorphCube(cube);
+        this.addToScene();
 
         window.addEventListener('resize', onWindowResize);
         animate();
-
     }
 
     createSceneContent() {
@@ -98,22 +74,27 @@ class RTCG {
         sphereRedSlider = createSphere("rgb(0, 0, 0)");
         sphereGreenSlider = createSphere("rgb(0, 0, 0)");
         sphereBlueSlider = createSphere("rgb(0, 0, 0)");
-        sphereAlphalider = createSphere("rgb(0, 0, 0)");
-
-
+        sphereAlphaSlider = createSphere("rgb(0, 0, 0)");
+        sphereBrightnessSlider = createSphere("rgb(0, 0, 0)");
         sphereStripesFrequenzySlider = createSphere("rgb(255, 255, 255)");
-        sphereLightPosSlider = createSphere("rgb(255, 255, 0)");
+        sphereLightXPosSlider = createSphere("rgb(255, 255, 0)");
+        sphereLightYPosSlider = createSphere("rgb(255, 255, 0)");
+        sphereLightZPosSlider = createSphere("rgb(255, 255, 0)");
 
         createSliderObject(sphereRedSlider, sceneObjects, "uSlider_Red");
         createSliderObject(sphereGreenSlider, sceneObjects, "uSlider_Green");
         createSliderObject(sphereBlueSlider, sceneObjects, "uSlider_Blue");
-        createSliderObject(sphereAlphalider, sceneObjects, "uSlider_Alpha");
+        createSliderObject(sphereAlphaSlider, sceneObjects, "uSlider_Alpha");
+        createSliderObject(sphereBrightnessSlider, sceneObjects, "uSlider_Brightness");
         createSliderObject(sphereStripesFrequenzySlider, sceneObjects, "uSlider_Stripe_Frequency");
-        createSliderObject(sphereLightPosSlider, sceneObjects, "uLight_Pos", light);
+        createSliderObject(sphereLightXPosSlider, sceneObjects, "uLight_PosX", light);
+        createSliderObject(sphereLightYPosSlider, sceneObjects, "uLight_PosY", light);
+        createSliderObject(sphereLightZPosSlider, sceneObjects, "uLight_PosZ", light);
 
         createColorButton(sceneObjects);
         createToggleStripesButton(sceneObjects);
         createInvertButton(sceneObjects);
+        createBrightnessButton(sceneObjects);
 
         this.moveObject(torusKnot, -1, 0, -2);
         this.moveObject(cube, 0, 0, -2);
@@ -122,14 +103,34 @@ class RTCG {
         sphereRedSlider.position.set(1, 1.8, 0.5);
         sphereGreenSlider.position.set(1, 1.7, 0.5);
         sphereBlueSlider.position.set(1, 1.6, 0.5);
-        sphereAlphalider.position.set(1, 1.5, -0.5);
-        sphereStripesFrequenzySlider.position.set(1, 1.4, 0.5);
-        sphereLightPosSlider.position.set(1, 1.3, 0);
+        sphereAlphaSlider.position.set(1, 1.5, -0.5);
+        sphereBrightnessSlider.position.set(1, 1.4, 0);
+        sphereStripesFrequenzySlider.position.set(1, 1.3, 0.5);
+        sphereLightXPosSlider.position.set(1, 1.2, 0);
+        sphereLightYPosSlider.position.set(1, 1.1, -0.5);
+        sphereLightZPosSlider.position.set(1, 1, 0.5);
 
         plane.position.set(0, -1, -2);
         plane.rotation.set(190, 0, 0);
     }
+    addToScene() {
+        scene.add(light);
+        scene.add(helper);
 
+        scene.add(torusKnot);
+        scene.add(plane);
+        scene.add(cube);
+        scene.add(cone)
+        scene.add(sphereRedSlider);
+        scene.add(sphereGreenSlider);
+        scene.add(sphereBlueSlider);
+        scene.add(sphereAlphaSlider);
+        scene.add(sphereBrightnessSlider);
+        scene.add(sphereStripesFrequenzySlider);
+        scene.add(sphereLightXPosSlider);
+        scene.add(sphereLightYPosSlider);
+        scene.add(sphereLightZPosSlider);
+    }
 
     moveObject(object, x, y, z) {
         object.position.set(x, y, z);

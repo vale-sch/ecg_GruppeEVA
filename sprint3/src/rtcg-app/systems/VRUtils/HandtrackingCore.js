@@ -154,16 +154,35 @@ class SliderSystem extends System {
                             })
 
                         }
+                        if (entity.uniformName == "uSlider_Brightness") {
+                            entity.objectsWithUniform.forEach((object) => {
+                                object.material.uniforms[entity.uniformName].value = -4 * (slider.attachedPointer.children[0].position.z);
+                            })
+                        }
                         if (entity.uniformName == "uSlider_Stripe_Frequency") {
                             entity.objectsWithUniform.forEach((object) => {
                                 object.material.uniforms[entity.uniformName].value = (slider.attachedPointer.children[0].position.z + 0.2516) * 0.01;
                             })
                         }
-                        if (entity.uniformName == "uLight_Pos") {
+                        if (entity.uniformName == "uLight_PosX") {
                             entity.objectsWithUniform.forEach((object) => {
-                                object.material.uniforms[entity.uniformName].value = new Vector3((slider.attachedPointer.children[0].position.z) * 5, object.material.uniforms[entity.uniformName].value.y, object.material.uniforms[entity.uniformName].value.z);
+                                object.material.uniforms.uLight_Pos.value = new Vector3(slider.attachedPointer.children[0].position.z * -5, object.material.uniforms.uLight_Pos.value.y, object.material.uniforms.uLight_Pos.value.z);
                             })
-                            entity.light.position.set(slider.attachedPointer.children[0].position.z * 10, entity.light.position.y, entity.light.position.z);
+                            entity.light.position.set(slider.attachedPointer.children[0].position.z * -5, entity.light.position.y, entity.light.position.z);
+
+                        }
+                        if (entity.uniformName == "uLight_PosY") {
+                            entity.objectsWithUniform.forEach((object) => {
+                                object.material.uniforms.uLight_Pos.value = new Vector3(object.material.uniforms.uLight_Pos.value.x, slider.attachedPointer.children[0].position.z * -5, object.material.uniforms.uLight_Pos.value.z);
+                            })
+                            entity.light.position.set(entity.light.position.x, slider.attachedPointer.children[0].position.z * -5, entity.light.position.z);
+
+                        }
+                        if (entity.uniformName == "uLight_PosZ") {
+                            entity.objectsWithUniform.forEach((object) => {
+                                object.material.uniforms.uLight_Pos.value = new Vector3(object.material.uniforms.uLight_Pos.value.x, object.material.uniforms.uLight_Pos.value.y, slider.attachedPointer.children[0].position.z * -5);
+                            })
+                            entity.light.position.set(entity.light.position.x, entity.light.position.y, slider.attachedPointer.children[0].position.z * -5);
 
                         }
                     }
