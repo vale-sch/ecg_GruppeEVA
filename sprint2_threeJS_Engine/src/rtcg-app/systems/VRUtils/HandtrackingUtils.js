@@ -15,6 +15,8 @@ import * as THREE from '../../../../js/three.module.js'
 const world = new World();
 
 let menuMesh;
+let audioState;
+
 class HandtrackingUtils {
 
     constructor(scene, renderer, camera) {
@@ -251,7 +253,7 @@ function createColorButton(objectsWithUniform) {
     tIEntity.addComponent(Button, { action: tSAction });
 }
 
-function createToggleAudioButton(sound) {
+function createToggleAudioButton(sound1, sound2) {
 
     const soundButton = makeButtonMesh(0.2, 0.1, 0.01, 0x000000);
     const soundButtonText = createText('toggle sound', 0.03);
@@ -266,7 +268,15 @@ function createToggleAudioButton(sound) {
     tSEntity.addComponent(Object3D, { object: soundButton });
     const tSAction = function () {
 
-        sound.play();
+        if(!audioState) {
+            sound1.play();
+            sound2.play();
+            audioState = true;
+        } else {
+            sound1.pause();
+            sound2.pause();
+            audioState = false;
+        }
 
     };
 

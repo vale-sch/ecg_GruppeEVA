@@ -152,16 +152,14 @@ class RTCG {
         audioLoader.load('./src/rtcg-app/sounds/test.ogg', function (buffer) {
             sound1.setBuffer(buffer);
             sound1.setRefDistance(0.5);
-            sound1.play();
-            /* sound2.setBuffer(buffer);
+            sound2.setBuffer(buffer);
             sound2.setRefDistance(0.5);
-            sound2.play(); */
         });
 
-        createToggleAudioButton(sound1);
+        createToggleAudioButton(sound1, sound2);
 
         speaker1.add(sound1);
-        //speaker2.add(sound2);
+        speaker2.add(sound2);
         plane.position.set(0, -1, -2);
         plane.rotation.set(190, 0, 0);
     }
