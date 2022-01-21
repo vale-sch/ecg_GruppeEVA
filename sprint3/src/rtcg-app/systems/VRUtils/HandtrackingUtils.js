@@ -13,7 +13,8 @@ import * as THREE from '../../../../js/three.module.js'
 
 
 const world = new World();
-
+let audioStateLeftBox = false;
+let audioStateRightBox = false;
 let menuMesh;
 class HandtrackingUtils {
 
@@ -290,7 +291,86 @@ function createBrightnessButton(objectsWithUniform) {
 
     tBEntity.addComponent(Button, { action: tBAction });
 }
+function createToggleAudioButtonLeft(sound1) {
 
+    const soundButtonRight = makeButtonMesh(0.33, 0.14, 0.01, 0x000000);
+    const soundButtonTextRight = createText('TOGGLE LEFT SOUND', 0.03);
+    soundButtonRight.add(soundButtonTextRight);
+    soundButtonTextRight.position.set(0, 0, 0.0051);
+    soundButtonRight.position.set(0.5, -0.2, -0.25);
+    soundButtonRight.rotation.set(0, -45, 0);
+    menuMesh.add(soundButtonRight);
+
+    const tSEntity = world.createEntity();
+    tSEntity.addComponent(Intersectable);
+    tSEntity.addComponent(Object3D, { object: soundButtonRight });
+    const tSAction = function () {
+
+        if (!audioStateLeftBox) {
+            sound1.play();
+            audioStateLeftBox = true;
+        } else {
+            sound1.stop();
+            audioStateLeftBox = false;
+        }
+
+    };
+
+    tSEntity.addComponent(Button, { action: tSAction });
+}
+function createToggleAudioButtonRight(sound2) {
+
+    const soundButtonLeft = makeButtonMesh(0.33, 0.14, 0.01, 0x000000);
+    const soundButtonTextLeft = createText('TOGGLE RIGHT SOUND', 0.03);
+    soundButtonLeft.add(soundButtonTextLeft);
+    soundButtonTextLeft.position.set(0, 0, 0.0051);
+    soundButtonLeft.position.set(0.5, -0.4, -0.25);
+    soundButtonLeft.rotation.set(0, -45, 0);
+    menuMesh.add(soundButtonLeft);
+
+    const tSEntity = world.createEntity();
+    tSEntity.addComponent(Intersectable);
+    tSEntity.addComponent(Object3D, { object: soundButtonLeft });
+    const tSAction = function () {
+
+        if (!audioStateRightBox) {
+            sound2.play();
+            audioStateRightBox = true;
+        } else {
+            sound2.stop();
+            audioStateRightBox = false;
+        }
+
+    };
+
+    tSEntity.addComponent(Button, { action: tSAction });
+}
+function createToggleAudioSync(sound1, sound2) {
+
+    const soundButtonSync = makeButtonMesh(0.33, 0.14, 0.01, 0x000000);
+    const soundButtonTextSync = createText('TOGGLE SYNC SOUND', 0.03);
+    soundButtonSync.add(soundButtonTextSync);
+    soundButtonTextSync.position.set(0, 0, 0.0051);
+    soundButtonSync.position.set(0.5, -0.6, -0.25);
+    soundButtonSync.rotation.set(0, -45, 0);
+    menuMesh.add(soundButtonSync);
+
+    const tSEntity = world.createEntity();
+    tSEntity.addComponent(Intersectable);
+    tSEntity.addComponent(Object3D, { object: soundButtonSync });
+    const tSAction = function () {
+        if (audioStateLeftBox) {
+            sound1.stop();
+            sound1.play();
+        }
+        if (audioStateRightBox) {
+            sound2.stop();
+            sound2.play();
+        }
+    };
+
+    tSEntity.addComponent(Button, { action: tSAction });
+}
 function createSliderObject(object, objectsWithUniform, uniformName, light) {
     const entity = world.createEntity();
     entity.addComponent(Intersectable);
@@ -302,7 +382,7 @@ function createSliderObject(object, objectsWithUniform, uniformName, light) {
         entity.light = light;
 }
 
-export { HandtrackingUtils, createDraggableObject, createSliderObject, createToggleStripesButton, createInvertButton, createColorButton, createBrightnessButton, world }
+export { HandtrackingUtils, createToggleAudioSync, createToggleAudioButtonRight, createToggleAudioButtonLeft, createDraggableObject, createSliderObject, createToggleStripesButton, createInvertButton, createColorButton, createBrightnessButton, world }
 
 function makeButtonMesh(x, y, z, color) {
 
