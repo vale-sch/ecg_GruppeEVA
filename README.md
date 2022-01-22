@@ -17,5 +17,5 @@
 # Documentation
 - To understand component system: https://three.ecsy.io/docs/#/
 - To understand hand tracking: https://threejs.org/examples/?q=hand#webxr_vr_handinput_pointerclick
-- TO understand positional audio: https://threejs.org/docs/#api/en/audio/PositionalAudio
+- To understand positional audio: https://threejs.org/docs/#api/en/audio/PositionalAudio
 
