@@ -1,4 +1,4 @@
-# ecg_GruppeEVA - Shader Demo
+# Shader Demo
 
 # Requirements
 - To run the shader demo you need an oculus quest 1 or 2 
