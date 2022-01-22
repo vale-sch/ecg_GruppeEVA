@@ -1,5 +1,6 @@
-# Shader Demo
 
+# Shader Demo
+![Screenshot](logo.png)
 # Requirements
 - To run the shader demo you need an oculus quest 1 or 2 
 - A working internet connection 
