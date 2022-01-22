@@ -1,7 +1,7 @@
-import { RTCG } from '../src/rtcg-app/RTCG.js';
+import { ShaderDemo } from '../src/rtcg-app/ShaderDemo.js';
 //Erzeugung der Hauptmethode
 function main() {
-    const dudarain_RTCG = new RTCG();
+    const shaderDemo = new ShaderDemo();
 }
 //main() Aufruf, um die RTCG-App zu starten
 main();

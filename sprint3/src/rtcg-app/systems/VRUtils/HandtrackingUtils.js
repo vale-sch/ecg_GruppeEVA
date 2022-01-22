@@ -69,7 +69,7 @@ class HandtrackingUtils {
         const exitButtonText = createText('exit', 0.06);
         exitButton.add(exitButtonText);
         exitButtonText.position.set(0, 0, 0.0051);
-        exitButton.position.set(0.5, 0.8, -0.25);
+        exitButton.position.set(0.5, 0.8, -0.5);
         exitButton.rotation.set(0, -45, 0);
         menuMesh.add(exitButton);
 
@@ -189,7 +189,7 @@ function createToggleStripesButton(objectsWithUniform) {
     const stripesButtonText = createText('TOGGLE STRIPES', 0.03);
     stripesButton.add(stripesButtonText);
     stripesButtonText.position.set(0, 0, 0.0051);
-    stripesButton.position.set(0.5, 0.6, -0.25);
+    stripesButton.position.set(0.5, 0.6, -0.5);
     stripesButton.rotation.set(0, -45, 0);
     menuMesh.add(stripesButton);
 
@@ -216,7 +216,7 @@ function createInvertButton(objectsWithUniform) {
     const invertButtonText = createText('TOGGLE INVERT', 0.03);
     invertButton.add(invertButtonText);
     invertButtonText.position.set(0, 0, 0.0051);
-    invertButton.position.set(0.5, 0.4, -0.25);
+    invertButton.position.set(0.5, 0.4, -0.5);
     invertButton.rotation.set(0, -45, 0);
     menuMesh.add(invertButton);
 
@@ -243,7 +243,7 @@ function createColorButton(objectsWithUniform) {
     const invertButtonText = createText('TOGGLE COLOR', 0.03);
     invertButton.add(invertButtonText);
     invertButtonText.position.set(0, 0, 0.0051);
-    invertButton.position.set(0.5, 0.2, -0.25);
+    invertButton.position.set(0.5, 0.2, -0.5);
     invertButton.rotation.set(0, -45, 0);
     menuMesh.add(invertButton);
 
@@ -270,7 +270,7 @@ function createBrightnessButton(objectsWithUniform) {
     const brightnessButtonText = createText('TOGGLE BRIGHTNESS', 0.03);
     brightnessButton.add(brightnessButtonText);
     brightnessButtonText.position.set(0, 0, 0.0051);
-    brightnessButton.position.set(0.5, 0, -0.25);
+    brightnessButton.position.set(0.5, 0, -0.5);
     brightnessButton.rotation.set(0, -45, 0);
     menuMesh.add(brightnessButton);
 
@@ -297,7 +297,7 @@ function createToggleAudioButtonLeft(sound1) {
     const soundButtonTextRight = createText('TOGGLE LEFT SOUND', 0.03);
     soundButtonRight.add(soundButtonTextRight);
     soundButtonTextRight.position.set(0, 0, 0.0051);
-    soundButtonRight.position.set(0.5, -0.2, -0.25);
+    soundButtonRight.position.set(0.5, -0.2, -0.5);
     soundButtonRight.rotation.set(0, -45, 0);
     menuMesh.add(soundButtonRight);
 
@@ -324,7 +324,7 @@ function createToggleAudioButtonRight(sound2) {
     const soundButtonTextLeft = createText('TOGGLE RIGHT SOUND', 0.03);
     soundButtonLeft.add(soundButtonTextLeft);
     soundButtonTextLeft.position.set(0, 0, 0.0051);
-    soundButtonLeft.position.set(0.5, -0.4, -0.25);
+    soundButtonLeft.position.set(0.5, -0.4, -0.5);
     soundButtonLeft.rotation.set(0, -45, 0);
     menuMesh.add(soundButtonLeft);
 
@@ -351,7 +351,7 @@ function createToggleAudioSync(sound1, sound2) {
     const soundButtonTextSync = createText('TOGGLE SYNC SOUND', 0.03);
     soundButtonSync.add(soundButtonTextSync);
     soundButtonTextSync.position.set(0, 0, 0.0051);
-    soundButtonSync.position.set(0.5, -0.6, -0.25);
+    soundButtonSync.position.set(0.5, -0.6, -0.5);
     soundButtonSync.rotation.set(0, -45, 0);
     menuMesh.add(soundButtonSync);
 

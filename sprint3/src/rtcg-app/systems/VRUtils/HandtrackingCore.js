@@ -1,4 +1,4 @@
-import { Plane, Vector3 } from '../../../../js/three.module.js';
+import { Vector3 } from '../../../../js/three.module.js';
 import { System, Component, TagComponent, Types } from './ecsy.module.js';
 
 class Object3D extends Component { }
