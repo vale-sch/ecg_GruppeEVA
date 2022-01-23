@@ -1,5 +1,5 @@
 import { WebGLRenderer, PCFSoftShadowMap, sRGBEncoding } from '../../../js/three.module.js';
-import { VRButton } from '../systems/VRUtils/VRButton.js';
+import { VRButton } from './VRUtils/VRButton.js';
 function createRenderer() {
     const renderer = new WebGLRenderer({ antialias: true });
 
