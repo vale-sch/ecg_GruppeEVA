@@ -129,12 +129,12 @@ class ShaderDemo {
         let sound2 = new THREE.PositionalAudio(listener);
 
         let audioLoader = new THREE.AudioLoader();
-        audioLoader.load('./src/rtcg-app/sounds/BloomL.wav', function (buffer) {
+        audioLoader.load('./src/shaderdemo/sounds/BloomL.wav', function (buffer) {
             sound1.setLoop(true);
             sound1.setBuffer(buffer);
             sound1.setRefDistance(1);
         });
-        audioLoader.load('./src/rtcg-app/sounds/BloomR.wav', function (buffer) {
+        audioLoader.load('./src/shaderdemo/sounds/BloomR.wav', function (buffer) {
             sound2.setLoop(true);
             sound2.setBuffer(buffer);
             sound2.setRefDistance(1);
