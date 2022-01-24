@@ -3,7 +3,7 @@
 ![Screenshot](logo.png)
 
 #Small Trailer
-[YouTube] (https://www.youtube.com/watch?v=2xpn_W1_3SU&ab_channel=ValentinSchmidberger)
+[YouTube-Link](https://www.youtube.com/watch?v=2xpn_W1_3SU&ab_channel=ValentinSchmidberger)
 # Requirements
 - To run the shader demo you need an oculus quest 1 or 2 
 - A working internet connection 
